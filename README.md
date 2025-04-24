@@ -7,8 +7,8 @@ Inspired by [learnopengl.com](https://learnopengl.com/)
 
 - Build a working 3D game engine using OpenGL
 - Learn low-level graphics programming and engine architecture
-- Apply some maths learn from uni and learn more complex topics
-- Goal is to create a simple game using this engine
+- Apply some maths from uni and learn more complex topics
+- To create a simple 3d game with the engine
 
 ## Tech Stack
 
