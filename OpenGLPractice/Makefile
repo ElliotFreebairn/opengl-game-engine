@@ -1,19 +1,29 @@
-CC = g++
-CFLAGS = -Iinclude
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -Iinclude -Iinclude/glad
 LDFLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi
-SRC = main.cpp
-OBJ = $(SRC:.cpp=.o)
+
+# Sources
+CPP_FILES = main.cpp
+C_FILES = src/glad.c
+
+OBJ = $(CPP_FILES:.cpp=.o) $(C_FILES:.c=.o)
 OUT = main
 
 all: $(OUT)
 
+# Linking
 $(OUT): $(OBJ)
-	$(CC) $(OBJ) -o $@ $(LDFLAGS)
+	$(CXX) $(OBJ) -o $@ $(LDFLAGS)
 
+# Compile C++ sources
 %.o: %.cpp
-	$(CC) -c $< -o $@ $(CFLAGS)
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+# Compile C sources
+%.o: %.c
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJ) $(OUT)
-
 
