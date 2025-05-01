@@ -5,6 +5,13 @@
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
+const char *vertexShaderSource = "#version 330 core\n"
+  "layout (location = 0) in vec3 aPos;\n"
+  "void main()\n"
+  "{\n"
+  " gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
+  "}\0";
+
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -46,6 +53,22 @@ int main()
    * GL_STATIC_DRAW = the data is set only once and used many times, can use DYNAMIC_DRAW 
    * for varying data (allows for faster writes)*/
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+  /*OpenGL dynamically compiles shaders at run-time from source cord*/
+  unsigned int vertexShader;
+  vertexShader = glCreateShader(GL_VERTEX_SHADER);
+  /* args[1] = how many strings passing to source code, args[2] = source code */
+  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+  glCompileShader(vertexShader);
+
+  int success;
+  char infoLog[512];
+  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+  if(!success) {
+    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
+    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog
+      << std::endl;
+  }
 
 
 
