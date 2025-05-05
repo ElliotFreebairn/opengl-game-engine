@@ -11,6 +11,13 @@ const char *vertexShaderSource = "#version 330 core\n"
   "{\n"
   " gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
   "}\0";
+const char *fragmentShaderSource = "#version 330 core\n"
+  "out vec4 FragColor;\n"
+  "void main()\n"
+  "{\n"
+  "FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
+  "}";
+
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -70,7 +77,36 @@ int main()
       << std::endl;
   }
 
+  unsigned int fragmentShader;
+  fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+  glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+  glCompileShader(fragmentShader);
 
+  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+  if(!success) {
+    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
+    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog
+      << std::endl;
+  }
+
+  /* Shader program is the final linked version of multiple shaders combined */
+  unsigned int shaderProgram;
+  shaderProgram = glCreateProgram(); // Creates a program and return and ID reference
+  
+  glAttachShader(shaderProgram, vertexShader);
+  glAttachShader(shaderProgram, fragmentShader);
+  glLinkProgram(shaderProgram);
+
+  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+  if(!success) {
+    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
+    std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << infoLog 
+      << std::endl;
+  }
+
+  glUseProgram(shaderProgram);
+  glDeleteShader(vertexShader);
+  glDeleteShader(fragmentShader);
 
   while(!glfwWindowShouldClose(window)) {
     glfwSwapBuffers(window);
