@@ -132,8 +132,8 @@ int main()
                         (void*)0); 
   glEnableVertexAttribArray(0);
 
-  /* -------------------- Element Buffer Objects ------------------- */
-  
+
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
 
 
   while(!glfwWindowShouldClose(window)) 
