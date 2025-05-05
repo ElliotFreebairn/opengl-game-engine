@@ -21,6 +21,7 @@ const char *fragmentShaderSource = "#version 330 core\n"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void processInput(GLFWwindow *window);
 
 int main()
 {
@@ -44,22 +45,6 @@ int main()
   }
 
   glViewport(0, 0, 800, 600);
-
-  float vertices[] = { // Y-axis points up in the up-direction and (0,0) is the center
-    -0.5f, -0.5f, 0.0f,
-    0.5f, -0.5f, 0.0f,
-    0.0f, 0.5f, 0.0f,
-  };
-
-  unsigned int VBO;
-  glGenBuffers(1, &VBO);
-  glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-  /* Copies vertices into bound buffer. args[1] = specifies size of data in bytes to pass,
-   * args[2] = the actual data to send, args[2] = How we want the graphics card to manage data
-   * GL_STATIC_DRAW = the data is set only once and used many times, can use DYNAMIC_DRAW 
-   * for varying data (allows for faster writes)*/
- // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
   /*OpenGL dynamically compiles shaders at run-time from source cord*/
   unsigned int vertexShader;
@@ -104,7 +89,6 @@ int main()
       << std::endl;
   }
 
-
   /* ---------------- Linking Vertex Attributes ----------------- */
 
   /* args[0] = which vertex attrib we want to configure (layout = 0),
@@ -117,42 +101,49 @@ int main()
   //                      (void*)0);
   //glEnableVertexAttribArray(0);
   
-  /* The VBO which the vertex attrib takes is determined which VBO assigned to
-    * GL_ARRAY_BUFFER, when calling glVertexAttribPointer */
-
-  /* 0. copy vertices array in a buffer for OpenGL to use */
-  //glBindBuffer(GL_ARRAY_BUFFER, VBO); 
-  //glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW); /* 1. set the vertex attrib pointers */
-  //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-  //                      (void*)0); // void* generic pointer, points to a memory location, but not saying what kind of data is there.
-  //glEnableVertexAttribArray(0);
-  ///* 2. use shader program to render an object */
-  //glUseProgram(shaderProgram);
-  //glDeleteShader(vertexShader);
-  //glDeleteShader(fragmentShader);
-
   /* --------------------- Vertex Array Objects ------------------- */
+  float vertices[] = {
+    0.5f, 0.5f, 0.0f, // top right
+    0.5f, -0.5f, 0.0f, // bottom right
+    -0.5f, -0.5f, 0.0f, // bottom left
+    -0.5f, 0.5f, 0.0f, // top left
+  };
+  unsigned int indices[] = {
+    0, 1, 3, // first triangle
+    1, 2, 3 // second triangle
+  };
   
-  unsigned int VAO;
+
+
+  unsigned int VBO, VAO, EBO;
   glGenVertexArrays(1, &VAO);
+  glGenBuffers(1, &VBO);
+  glGenBuffers(1, &EBO);
 
   /* 1. bind VAO */
   glBindVertexArray(VAO);
   /* 2. copy vertices array in buffer for OpenGL to use */
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
   /* 3. then set vertex attributes pointers */
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
                         (void*)0); 
   glEnableVertexAttribArray(0);
 
+  /* -------------------- Element Buffer Objects ------------------- */
+  
 
-  while(!glfwWindowShouldClose(window)) {
+
+  while(!glfwWindowShouldClose(window)) 
+  { 
+    processInput(window);
     glfwSwapBuffers(window);
     glfwPollEvents();
 
     glUseProgram(shaderProgram);
-    glDrawArrays(GL_TRIANGLES, 0, 3);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(VAO);
   }
 
@@ -162,4 +153,10 @@ int main()
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
   glViewport(0, 0, width, height);
+}
+
+void processInput(GLFWwindow *window) {
+  if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+    glfwSetWindowShouldClose(window, true);
+  }
 }
