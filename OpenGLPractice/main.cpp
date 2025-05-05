@@ -59,7 +59,7 @@ int main()
    * args[2] = the actual data to send, args[2] = How we want the graphics card to manage data
    * GL_STATIC_DRAW = the data is set only once and used many times, can use DYNAMIC_DRAW 
    * for varying data (allows for faster writes)*/
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+ // glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
   /*OpenGL dynamically compiles shaders at run-time from source cord*/
   unsigned int vertexShader;
@@ -104,10 +104,35 @@ int main()
       << std::endl;
   }
 
+
+  /* ---------------- Linking Vertex Attributes ----------------- */
+
+  /* args[0] = which vertex attrib we want to configure (layout = 0),
+    * args[1] = size of the vertex attrib (vec3),
+    * args[2] = type of data (GL_FLOAT = vec*)
+    * args[3] = whether data to be normalized,
+    * args[4] = stride, space between consecutive vertex attributes,
+    * args[5] = the offset of where the position data beings in buffer */
+  //glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+  //                      (void*)0);
+  //glEnableVertexAttribArray(0);
+  
+  /* The VBO which the vertex attrib takes is determined which VBO assigned to
+    * GL_ARRAY_BUFFER, when calling glVertexAttribPointer */
+
+  /* 0. copy vertices array in a buffer for OpenGL to use */
+  glBindBuffer(GL_ARRAY_BUFFER, VBO); 
+  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+  /* 1. set the vertex attrib pointers */
+  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
+                        (void*)0);
+  glEnableVertexAttribArray(0);
+  /* 2. use shader program to render an object */
   glUseProgram(shaderProgram);
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
+  
   while(!glfwWindowShouldClose(window)) {
     glfwSwapBuffers(window);
     glfwPollEvents();
