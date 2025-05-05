@@ -125,13 +125,14 @@ int main()
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
   /* 1. set the vertex attrib pointers */
   glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float),
-                        (void*)0);
+                        (void*)0); // void* generic pointer, points to a memory location, but not saying what kind of data is there.
   glEnableVertexAttribArray(0);
   /* 2. use shader program to render an object */
   glUseProgram(shaderProgram);
   glDeleteShader(vertexShader);
   glDeleteShader(fragmentShader);
 
+  /* --------------------- Vertex Array Objects ------------------- */
   
   while(!glfwWindowShouldClose(window)) {
     glfwSwapBuffers(window);
