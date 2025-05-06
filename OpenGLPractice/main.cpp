@@ -2,26 +2,18 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
-const char *vertexShaderSource = "#version 330 core\n"
-  "layout (location = 0) in vec3 aPos;\n"
-  "void main()\n"
-  "{\n"
-  " gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-  "}\0";
-const char *fragmentShaderSource = "#version 330 core\n"
-  "out vec4 FragColor;\n"
-  "void main()\n"
-  "{\n"
-  "FragColor = vec4(1.0f,0.5f,0.2f,1.0f);\n"
-  "}";
+
 
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
+std::string readTextFile(const std::string &fileName);
 
 int main()
 {
@@ -48,9 +40,11 @@ int main()
 
   /*OpenGL dynamically compiles shaders at run-time from source cord*/
   unsigned int vertexShader;
+  std::string vertexCode = readTextFile("shaders/vertex.glsl");
+  const char* vertexSource = vertexCode.c_str();
   vertexShader = glCreateShader(GL_VERTEX_SHADER);
   /* args[1] = how many strings passing to source code, args[2] = source code */
-  glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
+  glShaderSource(vertexShader, 1, &vertexSource, NULL);
   glCompileShader(vertexShader);
 
   int success;
@@ -62,9 +56,11 @@ int main()
       << std::endl;
   }
 
-  unsigned int fragmentShader;
+  unsigned int fragmentShader; 
+  std::string fragmentCode = readTextFile("shaders/fragment.glsl");
+  const char* fragmentSource = fragmentCode.c_str();
   fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
+  glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
   glCompileShader(fragmentShader);
 
   glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
@@ -159,4 +155,18 @@ void processInput(GLFWwindow *window) {
   if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
   }
+}
+
+std::string readTextFile(const std::string &fileName) {
+  std::ifstream file(fileName);
+  if(!file.is_open()) {
+    return "";
+  }
+
+
+  std::stringstream ss;
+  ss << file.rdbuf();
+  file.close();
+
+  return ss.str();
 }
