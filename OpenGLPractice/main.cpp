@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <cmath>
 
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
@@ -129,18 +130,34 @@ int main()
   glEnableVertexAttribArray(0);
 
 
-  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
+  
+  /* ------------ Uniform Shader ----------------- */
 
 
   while(!glfwWindowShouldClose(window)) 
   { 
     processInput(window);
-    glfwSwapBuffers(window);
-    glfwPollEvents();
+
+    // render
+    // clear the colourbuffer
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    
+    /* -------------------------------------- */
+    
+    float timeValue = glfwGetTime();
+    float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+    int vertexColourLocation = glGetUniformLocation(shaderProgram, "ourColor");
+    glUniform4f(vertexColourLocation, 0.0f, greenValue, 0.0f, 1.0f);
+    /* --------------------------------------- */
 
     glUseProgram(shaderProgram);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(VAO);
+
+    glfwSwapBuffers(window);
+    glfwPollEvents();
   }
 
   glfwTerminate();
