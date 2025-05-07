@@ -39,52 +39,9 @@ int main()
 
   glViewport(0, 0, 800, 600);
 
-  /*OpenGL dynamically compiles shaders at run-time from source cord*/
-  unsigned int vertexShader;
-  std::string vertexCode = readTextFile("shaders/vertex.glsl");
-  const char* vertexSource = vertexCode.c_str();
-  vertexShader = glCreateShader(GL_VERTEX_SHADER);
-  /* args[1] = how many strings passing to source code, args[2] = source code */
-  glShaderSource(vertexShader, 1, &vertexSource, NULL);
-  glCompileShader(vertexShader);
 
-  int success;
-  char infoLog[512];
-  glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-  if(!success) {
-    glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog
-      << std::endl;
-  }
+  Shader ourShader("shaders/vertex.glsl", "shaders/fragment.glsl");
 
-  unsigned int fragmentShader; 
-  std::string fragmentCode = readTextFile("shaders/fragment.glsl");
-  const char* fragmentSource = fragmentCode.c_str();
-  fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-  glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
-  glCompileShader(fragmentShader);
-
-  glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
-  if(!success) {
-    glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog
-      << std::endl;
-  }
-
-  /* Shader program is the final linked version of multiple shaders combined */
-  unsigned int shaderProgram;
-  shaderProgram = glCreateProgram(); // Creates a program and return and ID reference
-  
-  glAttachShader(shaderProgram, vertexShader);
-  glAttachShader(shaderProgram, fragmentShader);
-  glLinkProgram(shaderProgram);
-
-  glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-  if(!success) {
-    glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-    std::cout << "ERROR::SHADER::PROGRAM::LINK_FAILED\n" << infoLog 
-      << std::endl;
-  }
 
   /* ---------------- Linking Vertex Attributes ----------------- */
 
@@ -147,13 +104,14 @@ int main()
     // clear the colourbuffer
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    ourShader.use();
     
     /* -------------------------------------- */
     
-    float timeValue = glfwGetTime();
-    float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-    int vertexColourLocation = glGetUniformLocation(shaderProgram, "ourColor");
-    glUniform4f(vertexColourLocation, 0.0f, greenValue, 0.0f, 1.0f);
+   // float timeValue = glfwGetTime();
+   // float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+   // int vertexColourLocation = glGetUniformLocation(shaderProgram, "ourColor");
+   // glUniform4f(vertexColourLocation, 0.0f, greenValue, 0.0f, 1.0f);
     /* --------------------------------------- */
 
     glUseProgram(shaderProgram);
