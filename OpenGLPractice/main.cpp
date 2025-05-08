@@ -1,5 +1,6 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stb_image.h>
 
 #include <shader.h>
 
@@ -64,6 +65,12 @@ int main()
     0, 1, 3, // first triangle
     1, 2, 3 // second triangle
   };
+
+  float textCoords[] = {
+    0.0f, 0.0f, // lower-left corner
+    1.0f, 0.0f, // lower-right corner 
+    0.5f, 1.0f,
+  };
   
 
 
@@ -91,8 +98,25 @@ int main()
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
   
-  /* ------------ Uniform Shader ----------------- */
+ /* ------------ Textures ----------------- */
 
+  unsigned int texture;
+  glGenTextures(1, &texture);
+  glBindTexture(GL_TEXTURE_2D, texture);
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  int width, height, nrChannels;
+  unsigned char *data = stbi_load("container.jpg", &width, &height,
+                                  &nrChannels, 0);
+  if(data) {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_INT, data);
+  } else {
+    std::cout << "Failed to load texture" << std::endl;
+  }
 
   while(!glfwWindowShouldClose(window)) 
   { 

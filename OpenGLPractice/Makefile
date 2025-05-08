@@ -4,7 +4,7 @@ CXXFLAGS = -Iinclude -Iinclude/glad -MMD
 LDFLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi
 
 # Sources
-CPP_FILES = main.cpp
+CPP_FILES = main.cpp src/stb_image.cpp
 C_FILES = src/glad.c
 
 OBJ = $(CPP_FILES:.cpp=.o) $(C_FILES:.c=.o)
