@@ -1,6 +1,6 @@
 # Compiler and flags
 CXX = g++
-CXXFLAGS = -Iinclude -Iinclude/glad
+CXXFLAGS = -Iinclude -Iinclude/glad -MMD
 LDFLAGS = -lglfw -lGL -lX11 -lpthread -lXrandr -lXi
 
 # Sources
@@ -27,3 +27,4 @@ $(OUT): $(OBJ)
 clean:
 	rm -f $(OBJ) $(OUT)
 
+-include $(DEP)

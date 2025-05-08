@@ -1,6 +1,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include <shader.h>
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -9,12 +11,8 @@
 const unsigned int SCR_WIDTH = 800;
 const unsigned int SCR_HEIGHT = 600;
 
-
-
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
-std::string readTextFile(const std::string &fileName);
 
 int main()
 {
@@ -41,7 +39,6 @@ int main()
 
 
   Shader ourShader("shaders/vertex.glsl", "shaders/fragment.glsl");
-
 
   /* ---------------- Linking Vertex Attributes ----------------- */
 
@@ -89,6 +86,7 @@ int main()
   /* Color attribute */
   glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float),
                         (void*)(3 * sizeof(float)));
+  glEnableVertexAttribArray(1);
 
 
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); 
@@ -104,20 +102,11 @@ int main()
     // clear the colourbuffer
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+
     ourShader.use();
-    
-    /* -------------------------------------- */
-    
-   // float timeValue = glfwGetTime();
-   // float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
-   // int vertexColourLocation = glGetUniformLocation(shaderProgram, "ourColor");
-   // glUniform4f(vertexColourLocation, 0.0f, greenValue, 0.0f, 1.0f);
-    /* --------------------------------------- */
-
-    glUseProgram(shaderProgram);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(VAO);
-
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    
     glfwSwapBuffers(window);
     glfwPollEvents();
   }
@@ -136,16 +125,4 @@ void processInput(GLFWwindow *window) {
   }
 }
 
-std::string readTextFile(const std::string &fileName) {
-  std::ifstream file(fileName);
-  if(!file.is_open()) {
-    return "";
-  }
 
-
-  std::stringstream ss;
-  ss << file.rdbuf();
-  file.close();
-
-  return ss.str();
-}
