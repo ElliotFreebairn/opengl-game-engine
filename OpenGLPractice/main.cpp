@@ -143,6 +143,11 @@ int main()
   ourShader.setInt("texture1", 0);
   ourShader.setInt("texture2", 1);
 
+
+  /* ---------- Transformations/Matrix ------------------ */
+
+
+
   while(!glfwWindowShouldClose(window)) 
   { 
     processInput(window);
@@ -152,14 +157,26 @@ int main()
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, texture1);
 
+
+    glm::mat4 trans = glm::mat4(1.0f);
+    trans = glm::rotate(trans, (float)glfwGetTime(),
+                        glm::vec3(0.0f, 0.0f, 1.0f));
+    
     ourShader.use();
+    unsigned int transformLocation = glGetUniformLocation(ourShader.ID, "transform");
+    /* args[0] = location of uniform, args[1] = how many matrices to send,
+    * args[2] = to transpose matrix (swap columns and rows)
+    * args[3] = actual matrix data, but in the form GLM expects */
+    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans));
+
+  
+
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     
