@@ -1,6 +1,6 @@
 #include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include <stb_image.h>
+#include <GLFW/glfw3.h> 
+#include <stb_image.h> 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -145,7 +145,10 @@ int main()
 
 
   /* ---------- Transformations/Matrix ------------------ */
-
+  
+  /* Model, view  and project matrix */
+  /* Vertex coordinates start in local space as local coordinates. Then processed to world coordinates, view coordinates
+   * then clip coordinates and end up as screen coordinates */
 
 
   while(!glfwWindowShouldClose(window)) 
@@ -173,9 +176,26 @@ int main()
     /* args[0] = location of uniform, args[1] = how many matrices to send,
     * args[2] = to transpose matrix (swap columns and rows)
     * args[3] = actual matrix data, but in the form GLM expects */
-    glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans));
+    //glUniformMatrix4fv(transformLocation, 1, GL_FALSE, glm::value_ptr(trans));
+    
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(model, glm::radians(-55.0f),
+    glm::vec3(1.0f, 0.0f, 0.0f));
+          
+    glm::mat4 view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f,
+    100.0f);
 
-  
+    int modelLoc = glGetUniformLocation(ourShader.ID, "model");
+    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+    int viewLoc = glGetUniformLocation(ourShader.ID, "view");
+    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+
+    int projLoc = glGetUniformLocation(ourShader.ID, "projection");
+    glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
