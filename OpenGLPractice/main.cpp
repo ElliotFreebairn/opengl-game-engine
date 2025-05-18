@@ -31,6 +31,8 @@ float lastX = 400, lastY = 300;
 float yaw = -90.0f;
 float pitch = 0.0f;
 
+bool firstMouse = true;
+
 
 
 
@@ -312,6 +314,13 @@ void processInput(GLFWwindow *window) {
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+
+  if(firstMouse) {
+    lastX = xpos;
+    lastY = ypos;
+    firstMouse = false;
+  }
+
   float xoffset = xpos - lastX;
   float yoffset = lastY - ypos; // reversed ranges: y ranges from bottom to top
 
