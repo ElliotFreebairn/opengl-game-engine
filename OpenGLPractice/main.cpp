@@ -22,6 +22,9 @@ glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
+
 
 
 int main()
@@ -205,6 +208,10 @@ int main()
   { 
     processInput(window);
 
+    float currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+
     // render
     // clear the colourbuffer
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -270,7 +277,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 void processInput(GLFWwindow *window) {
 
 
-  const float cameraSpeed = 0.05f;
+  const float cameraSpeed = 2.5 * deltaTime;
   if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
     cameraPos += cameraSpeed * cameraFront;
   }
