@@ -17,6 +17,7 @@ const unsigned int SCR_HEIGHT = 600;
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
@@ -24,6 +25,12 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
+
+
+float lastX = 400, lastY = 300;
+float yaw = -90.0f;
+float pitch = 0.0f;
+
 
 
 
@@ -49,6 +56,8 @@ int main()
   }
 
   glViewport(0, 0, 800, 600);
+  glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+  glfwSetCursorPosCallback(window, mouse_callback);
 
 
   Shader ourShader("shaders/vertex.glsl", "shaders/fragment.glsl");
@@ -212,6 +221,13 @@ int main()
     deltaTime = currentFrame - lastFrame;
     lastFrame = currentFrame;
 
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(direction);
+
+
     // render
     // clear the colourbuffer
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -292,6 +308,28 @@ void processInput(GLFWwindow *window) {
   }
   if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
     glfwSetWindowShouldClose(window, true);
+  }
+}
+
+void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
+  float xoffset = xpos - lastX;
+  float yoffset = lastY - ypos; // reversed ranges: y ranges from bottom to top
+
+  lastX = xpos;
+  lastY = ypos;
+
+  const float sensitivty = 0.1f;
+  xoffset *= sensitivty;
+  yoffset *= sensitivty;
+
+  yaw += xoffset;
+  pitch += yoffset;
+
+  if(pitch > 89.0f) {
+    pitch = 89.0f;
+  }
+  if(pitch < -89.0f) {
+    pitch = -89.0f;
   }
 }
 
