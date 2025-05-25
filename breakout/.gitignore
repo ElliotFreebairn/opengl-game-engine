@@ -1,0 +1,11 @@
+# Build artifcats
+obj/ 
+game
+
+# Backup and temporary files
+*~
+*.swp
+*.tmp
+
+# Compiled objects
+*.o
