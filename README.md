@@ -20,12 +20,13 @@ Inspired by [learnopengl.com](https://learnopengl.com/)
 ## Status
 
 Currently in early development. Building the basics:
+
 - Window/context creation
 - Input handling
 - Basic rendering
 - Entity/component system (WIP)
 - Shaders
 
-## Setup (will be updated when the project is functional)
+## Libraries needed
 
-
+-lglfw -lGL -lGLU -lX11 -lpthread -lXrandr -lXi -ldl

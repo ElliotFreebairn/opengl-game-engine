@@ -35,9 +35,9 @@ LDFLAGS = -lglfw -lGL -lGLU -lX11 -lpthread -lXrandr -lXi -ldl
 # 	BIN: the name of the final output executable
 SRC_DIR = src
 OBJ_DIR = obj
-BIN = game
+BIN = program
 
-# SRCS: Uses wildcard to grab all .cpp file sfrom src/
+# SRCS: Uses wildcard to grab all .cpp files from src/
 SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 
 # OBJS: Converts each src/foo.cpp to obj/foo.o
