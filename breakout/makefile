@@ -37,13 +37,14 @@ SRC_DIR = src
 OBJ_DIR = obj
 BIN = program
 
-# SRCS: Uses wildcard to grab all .cpp files from src/
-SRCS = $(wildcard $(SRC_DIR)/*.cpp)
+SRCS_CPP = $(wildcard $(SRC_DIR)/*.cpp)
+SRCS_C   = $(wildcard $(SRC_DIR)/*.c)
+SRCS     = $(SRCS_CPP) $(SRCS_C)
 
-# OBJS: Converts each src/foo.cpp to obj/foo.o
-# 	patbust: pattern substituion function
-# 	It replaces src/filename.cpp to obj/filename.o
-OBJS = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS))
+OBJS_CPP = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRCS_CPP))
+OBJS_C   = $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SRCS_C))
+OBJS     = $(OBJS_CPP) $(OBJS_C)
+
 
 # Default target: make runs this
 # 	When running make, it build the BIN target(game), using the rule below
@@ -69,6 +70,11 @@ $(BIN): $(OBJS)
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	@mkdir -p $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(OBJ_DIR)
+	gcc -Wall -Iincludes -Isrc -c $< -o $@
+
 
 # Clean rule
 # 	Removes:

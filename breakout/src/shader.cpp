@@ -107,3 +107,31 @@ void Shader::SetMatrix4(const char *name, const glm::mat4 &matrix, bool useShade
   glUniformMatrix4fv(glGetUniformLocation(this->ID, name), 1, false,
                      glm::value_ptr(matrix)); 
 }
+
+void Shader::checkCompileErrors(unsigned int object, std::string type)
+{
+  int success;
+  char infoLog[1024];
+  if (type != "PROGRAM")
+  {
+    glGetShaderiv(object, GL_COMPILE_STATUS, &success);
+      if (!success)
+      {
+        glGetShaderInfoLog(object, 1024, NULL, infoLog);
+        std::cout << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
+          << infoLog << "\n -- --------------------------------------------------- -- "
+          << std::endl;
+      }
+  }
+  else
+  {
+    glGetProgramiv(object, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+      glGetProgramInfoLog(object, 1024, NULL, infoLog);
+      std::cout << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
+        << infoLog << "\n -- --------------------------------------------------- -- "
+        << std::endl;
+    }
+  }
+}
