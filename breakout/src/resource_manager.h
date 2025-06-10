@@ -33,12 +33,14 @@ public:
   // retrieves a stored texture
   static Texture2D GetTexture(std::string name);
   // de-allocated all loaded resources
-  static void clear();
+  static void Clear();
 private:
   // private constructor, don't want any actual resource manager objects
   ResourceManager() {}
   // loads and generates a shader from a file
-  static Shader loadShaderFromFile(const char *vShaderFile, const char *vShaderFile, const char *gShaderFile = nullptr);
+  static Shader loadShaderFromFile(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile = nullptr);
   // loads a single texture from file
   static Texture2D loadTextureFromFile(const char *file, bool alpha);
-}
+};
+
+#endif
