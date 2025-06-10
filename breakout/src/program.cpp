@@ -44,5 +44,36 @@ int main(int argc, char *argv[])
   // initalize game
   // -------------
   Breakout.Init();
+
+  // deltaTime variables
+  float deltaTime = 0.0f;
+  float lastFrame = 0.0f;
+
+  while (!glfwWindowShouldClose(window))
+  {
+    // calculate delta time
+    float currentFrame = glfwGetTime();
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+    glfwPollEvents();
+
+    // managing user input
+    Breakout.ProcessInput(deltaTime);
+
+    // update game state
+    Breakout.update(deltaTime);
+
+    // render
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+    Breakout.render();
+    glfwSwapBufffers(window);
+  }
+
+  // delete all resources
+  ResourceManager::Clear();
+
+  glfwTerminate();
+  return 0;
 }
 
