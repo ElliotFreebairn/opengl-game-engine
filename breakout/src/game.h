@@ -1,3 +1,8 @@
+#ifndef GAME_H
+#define GAME_H
+
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 enum GameState {
   GAME_ACTIVE,
@@ -9,7 +14,7 @@ class Game
 {
 public:
   // game state
-  GameState state;
+  GameState State;
   bool Keys[1024];
   unsigned int Width, Height;
   // constructor/destructor
@@ -22,3 +27,5 @@ public:
   void Update(float dt);
   void Render();
 };
+
+#endif

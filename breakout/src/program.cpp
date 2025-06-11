@@ -1,5 +1,5 @@
 #include <glad/glad.h>
-#include <GLFW3/glfw3.h>
+#include <GLFW/glfw3.h>
 
 #include "game.h"
 #include "resource_manager.h"
@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
   }
 
   glfwSetKeyCallback(window, key_callback);
-  glfwSetFrameBufferSizeCallback(window, framebuffer_size_callback);
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
   // OpenGL configuration
   // --------------------
@@ -61,13 +61,13 @@ int main(int argc, char *argv[])
     Breakout.ProcessInput(deltaTime);
 
     // update game state
-    Breakout.update(deltaTime);
+    Breakout.Update(deltaTime);
 
     // render
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
     glClear(GL_COLOR_BUFFER_BIT);
-    Breakout.render();
-    glfwSwapBufffers(window);
+    Breakout.Render();
+    glfwSwapBuffers(window);
   }
 
   // delete all resources
@@ -76,4 +76,5 @@ int main(int argc, char *argv[])
   glfwTerminate();
   return 0;
 }
+
 
