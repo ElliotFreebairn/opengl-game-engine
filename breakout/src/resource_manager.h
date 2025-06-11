@@ -27,11 +27,11 @@ public:
   static Shader LoadShader(const char *vShaderFile, const char *fShaderFile, const char *gShaderFile,
                            std::string name);
   // retrieves a stored shader
-  static Shader GetShader(std::string name);
+  static Shader& GetShader(std::string name);
   // loads (and generates) a texture form a file
   static Texture2D LoadTexture(const char *file, bool alpha, std::string name);
   // retrieves a stored texture
-  static Texture2D GetTexture(std::string name);
+  static Texture2D& GetTexture(std::string name);
   // de-allocated all loaded resources
   static void Clear();
 private:
