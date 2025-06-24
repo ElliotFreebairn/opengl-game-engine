@@ -1,4 +1,6 @@
+#include <vector>
 
+#include "game_object.h"
 
 
 class GameLevel 
@@ -19,4 +21,4 @@ private:
   void init(std::vector<std::vector<unsigned int>> tileData,
             unsigned int levelWidth, unsigned int levelHeight);
 
-}
+};
