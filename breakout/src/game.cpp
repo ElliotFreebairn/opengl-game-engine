@@ -6,6 +6,11 @@
 // Game-related state data
 SpriteRenderer *Renderer;
 
+const glm::vec2 PLAYER_SIZE(100.f, 20.0f);
+const float PLAYER_VELOCITY(500.0f);
+
+GameObject *Player;
+
 Game::Game(unsigned int width, unsigned int height) 
   : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
 {
@@ -33,6 +38,7 @@ void Game::Init()
   ResourceManager::LoadTexture("textures/awesomeface.png", true, "face");
   ResourceManager::LoadTexture("textures/block.png", false, "block");
   ResourceManager::LoadTexture("textures/block_solid.png", false, "block_solid");
+  ResourceManager::LoadTexture("textures/paddle.png", true, "paddle");
   // load levels
   GameLevel one; one.Load("src/levels/one.lvl", Width, Height / 2);
   GameLevel two; two.Load("src/levels/two.lvl", Width, Height / 2);
@@ -43,6 +49,10 @@ void Game::Init()
   this->Levels.push_back(three);
   this->Levels.push_back(four);
   this->Level = 0;
+
+  glm::vec2 playerPos = glm::vec2(Width / 2.0f - PLAYER_SIZE.x / 2.0f,
+                                  Height - PLAYER_SIZE.y);
+  Player = new GameObject(playerPos, PLAYER_SIZE, ResourceManager::GetTexture("paddle"));
   
 }
 void Game::Update(float dt)
@@ -51,7 +61,21 @@ void Game::Update(float dt)
 }
 
 void Game::ProcessInput(float dt) {
-
+  if (State == GAME_ACTIVE)
+  {
+    float velocity = PLAYER_VELOCITY * dt;
+    // move playerboard
+    if (Keys[GLFW_KEY_A])
+    {
+      if (Player->Position.x >= 0.0f)
+        Player->Position.x -= velocity;
+    }
+    if (Keys[GLFW_KEY_D])
+    {
+      if (Player->Position.x <= Width - Player->Size.x)
+        Player->Position.x += velocity;
+    }
+  }
 }
 
 void Game::Render()
@@ -61,4 +85,5 @@ void Game::Render()
                        45.0f, glm::vec3(0.0f, 1.0, 0.0f));
   // draw level
   this->Levels[Level].Draw(*Renderer);
+  Player->Draw(*Renderer);
 }
