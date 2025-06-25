@@ -1,3 +1,9 @@
+#ifndef BALLOBJECT_H
+#define BALLOBJECT_H
+
+#include <glad/glad.h>
+#include <glm/glm.hpp>
+
 #include "game_object.h"
 #include "texture.h"
 
@@ -14,4 +20,6 @@ public:
 
   glm::vec2 Move(float dt, unsigned int window_width);
   void Reset(glm::vec2 position, glm::vec2 velocity);
-}
+};
+
+#endif
