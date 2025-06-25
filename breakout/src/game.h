@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include "game_level.h"
+#include "game_object.h"
 
 enum GameState {
   GAME_ACTIVE,
@@ -33,6 +34,8 @@ public:
   void ProcessInput(float dt);
   void Update(float dt);
   void Render();
+
+  void DoCollisions();
 };
 
 #endif
