@@ -13,6 +13,7 @@ Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderF
                                    std::string name)
 {
   Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile);
+  std::cout << Shaders[name].ID << "\n\n";
   return Shaders[name];
 }
 
