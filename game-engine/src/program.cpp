@@ -19,7 +19,32 @@ struct Object
   }
 };
 
-void init_triangle(Object* obj);
+struct Rectangle3D
+{
+  unsigned int VAO;
+
+   
+  void draw(std::string shaderName) {
+    Shader shader = ResourceManager::GetShader(shaderName);
+
+    glm::mat4 model = glm::mat4(1.0f);
+    model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    shader.SetMatrix4("model", model);
+
+    glm::mat4 view = glm::mat4(1.0f);
+    view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
+    shader.SetMatrix4("view", view);
+
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    shader.SetMatrix4("projection", projection);
+
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+ 
+  }
+};
+
+void init_rectangle(Rectangle3D* obj);
 
 int main()
 {
@@ -44,11 +69,11 @@ int main()
   }
 
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-  Object triangle;
-  init_triangle(&triangle);
-  std::cout << triangle.VAO;
+  Rectangle3D rectangle;
+  init_rectangle(&rectangle);
    
-  ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "triangle");
+  //ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "triangle");
+  ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "rectangle");
 
   while (!glfwWindowShouldClose(window))
   {
@@ -57,11 +82,12 @@ int main()
     glClear(GL_COLOR_BUFFER_BIT);
     
     // plain 2D projection matrix
-    ResourceManager::GetShader("triangle").Use();
-    std::cout << ResourceManager::GetShader("triangle").ID;
+    ResourceManager::GetShader("rectangle").Use();
+    std::cout << ResourceManager::GetShader("rectangle").ID;
     
-    glBindVertexArray(triangle.VAO);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(rectangle.VAO);
+    rectangle.draw("rectangle");
+    //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
     
     glfwSwapBuffers(window);
@@ -76,7 +102,7 @@ void frame_buffer_size_callback(GLFWwindow* window, int width, int height)
   glViewport(0, 0, width, height);
 }
 
-void init_triangle(Object* triangle)
+void init_rectangle(Rectangle3D* rectangle)
 {
   float vertices[] = {
     // first triangle
@@ -95,7 +121,7 @@ void init_triangle(Object* triangle)
   glGenVertexArrays(1, &VAO);
   glGenBuffers(1, &EBO);
 
-  triangle->VAO =VAO;
+  rectangle->VAO =VAO;
 
   glBindVertexArray(VAO);
   glBindBuffer(GL_ARRAY_BUFFER, VBO);
