@@ -13,7 +13,6 @@ Shader ResourceManager::LoadShader(const char *vShaderFile, const char *fShaderF
                                    std::string name)
 {
   Shaders[name] = loadShaderFromFile(vShaderFile, fShaderFile);
-  std::cout << Shaders[name].ID << "\n\n";
   return Shaders[name];
 }
 
@@ -69,7 +68,7 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
   const char *vShaderCode = vertexCode.c_str();
   const char *fShaderCode = fragmentCode.c_str();
   // create shader object from source code'
-  Shader shader; 
+  Shader shader;
   shader.Compile(vShaderCode, fShaderCode);
   return shader;
 }
@@ -77,14 +76,22 @@ Shader ResourceManager::loadShaderFromFile(const char *vShaderFile, const char *
 Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha)
 {
   Texture2D texture;
-  if (alpha)
-  {
-    texture.Internal_Format = GL_RGBA;
-    texture.Image_Format = GL_RGBA;
-  }
   // load image
   int width, height, nrChannels;
   unsigned char* data = stbi_load(file, &width, &height, &nrChannels, 0);
+
+  if (nrChannels == 4) {
+      texture.Internal_Format = GL_RGBA;
+      texture.Image_Format = GL_RGBA;
+  } else if (nrChannels == 3) {
+      texture.Internal_Format = GL_RGB;
+      texture.Image_Format = GL_RGB;
+  } else {
+      std::cerr << "Unsupported number of channels: " << nrChannels << std::endl;
+      stbi_image_free(data);
+      return texture;
+  }
+
   // generate texture
   texture.Generate(width, height, data);
   // free image data
