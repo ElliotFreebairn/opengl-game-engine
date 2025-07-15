@@ -1,4 +1,4 @@
-#include <glad/glad.h>
+#include <glad/glad.h> 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
@@ -7,6 +7,9 @@
 #include "shader.h"
 
 #include <iostream>
+#include <vector>
+#include <cstdlib>
+#include <random>
 
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
@@ -27,6 +30,7 @@ struct Rectangle3D
 {
   unsigned int VAO;
   unsigned int VBO;
+  glm::vec3 translation {0.0f, 0.5f, -1.0f};
 
   void init_data() {
     float vertices[] = {
@@ -104,7 +108,8 @@ struct Rectangle3D
     shader.SetInteger("ourTexture", 0);
 
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(0.5, 1.0f, 0.0f));
+    model = glm::translate(model, this->translation);
+    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.5f));
     shader.SetMatrix4("model", model);
 
     glm::mat4 view = glm::mat4(1.0f);
@@ -122,12 +127,20 @@ struct Rectangle3D
     glBindVertexArray(this->VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
   }
+
+  void set_model_translation(glm::vec3 translation) {
+    this->translation=translation;
+  }
 };
 
 
 void frame_buffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
+
+void place_block();
+
+std::vector<Rectangle3D> blocks;
 
 int main()
 {
@@ -161,7 +174,6 @@ int main()
   ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "rectangle");
   ResourceManager::LoadTexture("resources/textures/block.jpg", true, "block");
 
-
   Rectangle3D rectangle;
   rectangle.init_data();
 
@@ -177,7 +189,10 @@ int main()
 
     processInput(window);
 
-    rectangle.draw("rectangle");
+    std::cout << "size of blocks" << blocks.size();
+    for (Rectangle3D& block : blocks) {
+      block.draw("rectangle");
+    }
     glfwSwapBuffers(window);
   }
 
@@ -186,6 +201,23 @@ int main()
   glfwTerminate();
 
   return 0;
+}
+
+void place_block() {
+  Rectangle3D block;
+  block.init_data();
+  
+  std::default_random_engine gen;
+  std::uniform_real_distribution<float> distribution(-2.0f, 2.0f);
+
+  float x = distribution(gen);
+  float y = distribution(gen);
+  float z = distribution(gen);
+
+  glm::vec3 translation(x, y, z);
+
+  block.set_model_translation(translation);
+  blocks.push_back(block);
 }
 
 // resizes viewport when user resizes the glfw window
@@ -209,6 +241,11 @@ void processInput(GLFWwindow *window)
     cameraPos += cameraSpeed * cameraUp;
   if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
     cameraPos -= cameraSpeed * cameraUp;
+  if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+  {
+    std::cout << "placing" << std::endl;
+    place_block();
+  }
 }
 
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
