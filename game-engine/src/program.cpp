@@ -5,6 +5,7 @@
 #include "texture.h"
 #include "resource_manager.h"
 #include "shader.h"
+#include "rectangle.h"
 
 #include <iostream>
 #include <vector>
@@ -33,121 +34,13 @@ bool firstMouse = true;
 std::default_random_engine gen(static_cast<unsigned>(glfwGetTime()));
 std::uniform_real_distribution<float> distribution(-2.0f, 2.0f);
 
-struct Rectangle3D
-{
-  unsigned int VAO;
-  unsigned int VBO;
-  glm::vec3 translation {0.0f, 0.5f, -1.0f};
-
-  void init_data() {
-    float vertices[] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
-
-    unsigned int VBO, VAO;
-    glGenBuffers(1, &VBO);
-    glGenVertexArrays(1, &VAO);
-
-    this->VAO = VAO;
-    this->VBO = VBO;
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    // set vertex attribute pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    // glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glEnableVertexAttribArray(0);
-
-    // set texture attribute pointers
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float),
-                          (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    glBindVertexArray(0);
-  }
-
-
-  void draw(std::string shaderName) {
-    Shader shader = ResourceManager::GetShader(shaderName);
-    shader.Use();
-    shader.SetInteger("ourTexture", 0);
-
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, this->translation);
-    model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.5f));
-    shader.SetMatrix4("model", model);
-
-    glm::mat4 view = glm::mat4(1.0f);
-    view =  glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-    shader.SetMatrix4("view", view);
-
-    glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
-    shader.SetMatrix4("projection", projection);
-
-    glActiveTexture(GL_TEXTURE0);
-    Texture2D texture = ResourceManager::GetTexture("block");
-    texture.Bind();
-
-    glBindVertexArray(this->VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36);
-  }
-
-  void set_model_translation(glm::vec3 translation) {
-    this->translation=translation;
-  }
-};
-
-
 void frame_buffer_size_callback(GLFWwindow* window, int width, int height);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
 
 void place_block();
 
-std::vector<Rectangle3D> blocks;
+std::vector<Rectangle> blocks;
 
 int main()
 {
@@ -178,12 +71,11 @@ int main()
   glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
   glEnable(GL_DEPTH_TEST);
 
-  ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "rectangle");
+  Shader shader = ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "rectangle");
   ResourceManager::LoadTexture("resources/textures/block.jpg", true, "block");
 
-  srand (static_cast<unsigned>(time(0))); // seeding the random number generator
-  Rectangle3D rectangle;
-  rectangle.init_data();
+
+  //srand (static_cast<unsigned>(time(0))); // seeding the random number generator
 
   while (!glfwWindowShouldClose(window))
   {
@@ -196,9 +88,17 @@ int main()
     lastFrame = currentFrame;
 
     processInput(window);
+    
+    glm::mat4 view = glm::mat4(1.0f);
+    view =  glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
+    shader.SetMatrix4("view", view);
 
-    for (Rectangle3D& block : blocks) {
-      block.draw("rectangle");
+    glm::mat4 projection;
+    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    shader.SetMatrix4("projection", projection);
+
+    for (Rectangle& block : blocks) {
+      block.draw();
     }
     glfwSwapBuffers(window);
   }
@@ -211,9 +111,7 @@ int main()
 }
 
 void place_block() {
-  Rectangle3D block;
-  block.init_data();
-
+  Rectangle block("rectangle", "block");
 
   float x = distribution(gen);
   float y = distribution(gen);
@@ -222,8 +120,9 @@ void place_block() {
   std::cout << "output of distribution gen: " << std::to_string(distribution(gen)) << "size of blocks vector: " << blocks.size() << "x: " << x << " y: " << y << " z: " << z << std::endl;
 
   glm::vec3 translation(x, y, z);
+  block.Position = translation;
 
-  block.set_model_translation(translation);
+  //block.set_model_translation(translation);
   blocks.push_back(block);
 }
 
