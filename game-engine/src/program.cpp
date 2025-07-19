@@ -8,6 +8,8 @@
 
 #include <iostream>
 #include <vector>
+
+#include <ctime>
 #include <cstdlib>
 #include <random>
 
@@ -21,10 +23,15 @@ glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
+float last_block_place = 0.0f;
+
 float lastX = 400, lastY = 300;
 float pitch = 0, yaw = -90.f;
 
 bool firstMouse = true;
+
+std::default_random_engine gen(static_cast<unsigned>(glfwGetTime()));
+std::uniform_real_distribution<float> distribution(-2.0f, 2.0f);
 
 struct Rectangle3D
 {
@@ -174,6 +181,7 @@ int main()
   ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "rectangle");
   ResourceManager::LoadTexture("resources/textures/block.jpg", true, "block");
 
+  srand (static_cast<unsigned>(time(0))); // seeding the random number generator
   Rectangle3D rectangle;
   rectangle.init_data();
 
@@ -189,7 +197,6 @@ int main()
 
     processInput(window);
 
-    std::cout << "size of blocks" << blocks.size();
     for (Rectangle3D& block : blocks) {
       block.draw("rectangle");
     }
@@ -206,13 +213,13 @@ int main()
 void place_block() {
   Rectangle3D block;
   block.init_data();
-  
-  std::default_random_engine gen;
-  std::uniform_real_distribution<float> distribution(-2.0f, 2.0f);
+
 
   float x = distribution(gen);
   float y = distribution(gen);
   float z = distribution(gen);
+
+  std::cout << "output of distribution gen: " << std::to_string(distribution(gen)) << "size of blocks vector: " << blocks.size() << "x: " << x << " y: " << y << " z: " << z << std::endl;
 
   glm::vec3 translation(x, y, z);
 
@@ -241,10 +248,15 @@ void processInput(GLFWwindow *window)
     cameraPos += cameraSpeed * cameraUp;
   if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
     cameraPos -= cameraSpeed * cameraUp;
+
+  float current_frame = glfwGetTime();
   if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
   {
-    std::cout << "placing" << std::endl;
-    place_block();
+    if (current_frame - last_block_place >= 0.2f) {
+      last_block_place = current_frame;
+      std::cout << "placing: ";
+      place_block();
+    }
   }
 }
 
