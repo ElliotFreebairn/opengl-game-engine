@@ -113,14 +113,20 @@ int main()
 void place_block() {
   Rectangle block("rectangle", "block");
 
-  float x = distribution(gen);
-  float y = distribution(gen);
-  float z = distribution(gen);
+  // Position a ceratin distance in front of the player
+  glm::vec3 target = cameraPos + glm::normalize(cameraFront) * 5.0f;
 
-  std::cout << "output of distribution gen: " << std::to_string(distribution(gen)) << "size of blocks vector: " << blocks.size() << "x: " << x << " y: " << y << " z: " << z << std::endl;
+  glm::vec3 block_pos = glm::floor(target);
+  
+  block.Position = block_pos;
+ // float x = distribution(gen);
+ // float y = distribution(gen);
+ // float z = distribution(gen);
 
-  glm::vec3 translation(x, y, z);
-  block.Position = translation;
+  //std::cout << "output of distribution gen: " << std::to_string(distribution(gen)) << "size of blocks vector: " << blocks.size() << "x: " << x << " y: " << y << " z: " << z << std::endl;
+
+  //glm::vec3 translation(x, y, z);
+  //block.Position = translation;
 
   //block.set_model_translation(translation);
   blocks.push_back(block);
@@ -153,8 +159,8 @@ void processInput(GLFWwindow *window)
   {
     if (current_frame - last_block_place >= 0.2f) {
       last_block_place = current_frame;
-      std::cout << "placing: ";
       place_block();
+      std::cout << "last x pos: " << lastX  << " last y pos: " << lastY << std::endl;
     }
   }
 }
