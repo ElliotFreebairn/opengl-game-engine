@@ -6,6 +6,7 @@
 #include "resource_manager.h"
 #include "shader.h"
 #include "rectangle.h"
+#include "camera.h"
 
 #include <iostream>
 #include <vector>
@@ -17,10 +18,13 @@
 const int SCREEN_WIDTH = 800;
 const int SCREEN_HEIGHT = 600;
 
-glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-
+// camera
+Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+//
+//glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
+//glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+//glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+//
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
@@ -89,13 +93,13 @@ int main()
 
     processInput(window);
     
-    glm::mat4 view = glm::mat4(1.0f);
-    view =  glm::lookAt(cameraPos, cameraPos + cameraFront, cameraUp);
-    shader.SetMatrix4("view", view);
-
     glm::mat4 projection;
-    projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
     shader.SetMatrix4("projection", projection);
+
+
+    glm::mat4 view = camera.GetViewMatrix(); 
+    shader.SetMatrix4("view", view);
 
     for (Rectangle& block : blocks) {
       block.draw();
@@ -114,10 +118,11 @@ void place_block() {
   Rectangle block("rectangle", "block");
 
   // Position a ceratin distance in front of the player
-  glm::vec3 target = cameraPos + glm::normalize(cameraFront) * 5.0f;
+  glm::vec3 target = camera.Position + glm::normalize(camera.Front) * 5.0f;
 
   glm::vec3 block_pos = glm::floor(target);
-  
+
+
   block.Position = block_pos;
  // float x = distribution(gen);
  // float y = distribution(gen);
@@ -142,17 +147,17 @@ void processInput(GLFWwindow *window)
 {
   const float cameraSpeed = 2.5f * deltaTime;
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-    cameraPos += cameraSpeed * cameraFront;
+    camera.ProcessKeyboard(FORWARD, deltaTime);
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    cameraPos -= cameraSpeed * cameraFront;
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-    cameraPos -= glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-    cameraPos += glm::normalize(glm::cross(cameraFront, cameraUp)) * cameraSpeed;
-  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-    cameraPos += cameraSpeed * cameraUp;
-  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-    cameraPos -= cameraSpeed * cameraUp;
+    camera.ProcessKeyboard(BACKWARD, deltaTime); 
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) 
+    camera.ProcessKeyboard(LEFT, deltaTime); 
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) 
+    camera.ProcessKeyboard(RIGHT, deltaTime);
+//  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+//    cameraPos += cameraSpeed * cameraUp;
+//  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+//    cameraPos -= cameraSpeed * cameraUp;
 
   float current_frame = glfwGetTime();
   if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
@@ -165,35 +170,22 @@ void processInput(GLFWwindow *window)
   }
 }
 
-void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 {
-  if (firstMouse)
-  {
+  float xpos = static_cast<float>(xposIn);
+  float ypos = static_cast<float>(yposIn);
+
+  if (firstMouse) {
     lastX = xpos;
     lastY = ypos;
     firstMouse = false;
   }
 
   float xoffset = xpos - lastX;
-  float yoffset = lastY - ypos; // reversed: y ranges bottom to top
+  float yoffset = lastY - ypos;
+
   lastX = xpos;
   lastY = ypos;
 
-  const float sensitivity = 0.1f;
-  xoffset *= sensitivity;
-  yoffset *= sensitivity;
-
-  yaw += xoffset;
-  pitch += yoffset;
-
-  if (pitch > 89.0f)
-    pitch = 89.0f;
-  if (pitch < -89.0f)
-    pitch = -89.0f;
-
-  glm::vec3 direction;
-  direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-  direction.y = sin(glm::radians(pitch));
-  direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-  cameraFront = glm::normalize(direction);
+  camera.ProcessMouseMovement(xoffset, yoffset);
 }
