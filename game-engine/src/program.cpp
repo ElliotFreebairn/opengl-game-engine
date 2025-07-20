@@ -20,11 +20,8 @@ const int SCREEN_HEIGHT = 600;
 
 // camera
 Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
-//
-//glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
-//glm::vec3 cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-//glm::vec3 cameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
-//
+glm::vec3 shooting_velocity(0.0f);
+
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
@@ -43,6 +40,7 @@ void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 void processInput(GLFWwindow *window);
 
 void place_block();
+Rectangle shoot_block(std::string shader_name, std::string texture_name);
 
 std::vector<Rectangle> blocks;
 
@@ -78,7 +76,9 @@ int main()
   Shader shader = ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "rectangle");
   ResourceManager::LoadTexture("resources/textures/block.jpg", true, "block");
 
-
+  Rectangle shooting_block("rectangle", "block");
+  shooting_block.set_position(camera.Position + glm::normalize(camera.Front) * 2.0f);
+  shooting_velocity = glm::normalize(camera.Front) * 3.0f; // 10 units per secon
   //srand (static_cast<unsigned>(time(0))); // seeding the random number generator
 
   while (!glfwWindowShouldClose(window))
@@ -92,15 +92,22 @@ int main()
     lastFrame = currentFrame;
 
     processInput(window);
-    
+
     glm::mat4 projection;
     projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
     shader.SetMatrix4("projection", projection);
 
+    shooting_block.Position += shooting_velocity * deltaTime;
 
-    glm::mat4 view = camera.GetViewMatrix(); 
+    std::cout << "Shooting block postion: "
+              << shooting_block.Position.x << ", "
+              << shooting_block.Position.y << ", "
+              << shooting_block.Position.z << std::endl;
+
+    glm::mat4 view = camera.GetViewMatrix();
     shader.SetMatrix4("view", view);
 
+    shooting_block.draw();
     for (Rectangle& block : blocks) {
       block.draw();
     }
@@ -119,22 +126,22 @@ void place_block() {
 
   // Position a ceratin distance in front of the player
   glm::vec3 target = camera.Position + glm::normalize(camera.Front) * 5.0f;
-
   glm::vec3 block_pos = glm::floor(target);
 
-
   block.Position = block_pos;
- // float x = distribution(gen);
- // float y = distribution(gen);
- // float z = distribution(gen);
-
-  //std::cout << "output of distribution gen: " << std::to_string(distribution(gen)) << "size of blocks vector: " << blocks.size() << "x: " << x << " y: " << y << " z: " << z << std::endl;
-
-  //glm::vec3 translation(x, y, z);
-  //block.Position = translation;
-
-  //block.set_model_translation(translation);
   blocks.push_back(block);
+}
+
+Rectangle shoot_block(std::string shader_name, std::string texture_name) {
+  Rectangle block(shader_name, texture_name);
+
+  // Position a certain distance in front of the player
+  glm::vec3 target = camera.Position + glm::normalize(camera.Front) * 5.0f;
+  glm::vec3 block_pos = glm::floor(target);
+
+  block.set_position(block_pos);
+  blocks.push_back(block);
+  return block;
 }
 
 // resizes viewport when user resizes the glfw window
@@ -145,24 +152,19 @@ void frame_buffer_size_callback(GLFWwindow* window, int width, int height)
 
 void processInput(GLFWwindow *window)
 {
-  const float cameraSpeed = 2.5f * deltaTime;
   if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     camera.ProcessKeyboard(FORWARD, deltaTime);
   if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-    camera.ProcessKeyboard(BACKWARD, deltaTime); 
-  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) 
-    camera.ProcessKeyboard(LEFT, deltaTime); 
-  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) 
+    camera.ProcessKeyboard(BACKWARD, deltaTime);
+  if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    camera.ProcessKeyboard(LEFT, deltaTime);
+  if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     camera.ProcessKeyboard(RIGHT, deltaTime);
-//  if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-//    cameraPos += cameraSpeed * cameraUp;
-//  if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-//    cameraPos -= cameraSpeed * cameraUp;
 
   float current_frame = glfwGetTime();
   if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
   {
-    if (current_frame - last_block_place >= 0.2f) {
+    if (current_frame - last_block_place >= 0.1f) {
       last_block_place = current_frame;
       place_block();
       std::cout << "last x pos: " << lastX  << " last y pos: " << lastY << std::endl;
