@@ -23,4 +23,4 @@ Working on adding UI and improving structure for game objects and player code.
 -lglfw -lGL -lGLU -lX11 -lpthread -lXrandr -lXi -ldl
 
 # Usage
-``make && ./program``
+``cd /path/to/opengl-engine/game-engine && make run``
