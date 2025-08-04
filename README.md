@@ -1,21 +1,26 @@
-# Make Shift Game Engine
+# OpenGL Game Engine
 
-A minimal game engine built from scratch using OpenGL on Debian Linux.  
+Attempting to build a game engine from scratch, with the aim of improving my c++ and opengl knowledge
 Inspired by [learnopengl.com](https://learnopengl.com/)
 
-## My Tech Stack
+## Tech Details
 
 - **Language:** C+
-- **Graphics:** OpenGL
-- **OS:** Debian Linux
+- **Graphics API:** OpenGL
+- **Distro/OS:** Debian Linux
 - **Learning Resource:** [learnopengl.com](https://learnopengl.com/)
 
 ## Status
 
-Finished a tutorial from the resources mentioned above
+Finished the tutorials, building the game engine.
 
-Currently creating a fully working 2D breakout game
+3D functionality has been added and gimmicky abilities such as the user placing 3D squares based on mouse position.
+
+Working on adding UI and improving structure for game objects and player code.
 
 ## Libraries needed
 
 -lglfw -lGL -lGLU -lX11 -lpthread -lXrandr -lXi -ldl
+
+# Usage
+``make && ./program``
