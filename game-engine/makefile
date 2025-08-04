@@ -75,6 +75,8 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(OBJ_DIR)
 	gcc -Wall -Iincludes -Isrc -c $< -o $@
 
+run: $(BIN)
+	./$(BIN)
 
 # Clean rule
 # 	Removes:
