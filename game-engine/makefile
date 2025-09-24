@@ -78,6 +78,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 run: $(BIN)
 	./$(BIN)
 
+# add a make check target + .phony targets
 # Clean rule
 # 	Removes:
 # 		The object file directory obj/
