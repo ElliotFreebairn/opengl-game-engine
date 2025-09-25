@@ -45,7 +45,7 @@ std::vector<Rectangle> blocks;
 
 // Player camera
 Player current_player;
-Camera *camera;
+Camera &camera = current_player.get_camera();
 
 int main()
 {
@@ -79,11 +79,9 @@ int main()
 	Shader shader = ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "rectangle");
 	ResourceManager::LoadTexture("resources/textures/block.jpg", true, "block");
 
-	camera = &current_player.get_camera();
-
 	Rectangle shooting_block("rectangle", "block");
-	shooting_block.set_position(camera->Position + glm::normalize(camera->Front) * 2.0f);
-	shooting_velocity = glm::normalize(camera->Front) * 3.0f; // 10 units per secon
+	shooting_block.set_position(camera.Position + glm::normalize(camera.Front) * 2.0f);
+	shooting_velocity = glm::normalize(camera.Front) * 3.0f; // 10 units per secon
 
 
 	while (!glfwWindowShouldClose(window))
@@ -99,7 +97,7 @@ int main()
 		processInput(window);
 
 		glm::mat4 projection;
-		projection = glm::perspective(glm::radians(camera->Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
+		projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
 		shader.SetMatrix4("projection", projection);
 
 		shooting_block.Position += shooting_velocity * deltaTime;
@@ -109,7 +107,7 @@ int main()
 				  << shooting_block.Position.y << ", "
 				  << shooting_block.Position.z << std::endl;
 
-		glm::mat4 view = camera->GetViewMatrix();
+		glm::mat4 view = camera.GetViewMatrix();
 		shader.SetMatrix4("view", view);
 
 		shooting_block.draw();
@@ -132,7 +130,7 @@ void place_block()
 	Rectangle block("rectangle", "block");
 
 	// Position a ceratin distance in front of the player
-	glm::vec3 target = camera->Position + glm::normalize(camera->Front) * 5.0f;
+	glm::vec3 target = camera.Position + glm::normalize(camera.Front) * 5.0f;
 	glm::vec3 block_pos = glm::floor(target);
 
 	block.Position = block_pos;
@@ -144,7 +142,7 @@ Rectangle shoot_block(std::string shader_name, std::string texture_name)
 	Rectangle block(shader_name, texture_name);
 
 	// Position a certain distance in front of the player
-	glm::vec3 target = camera->Position + glm::normalize(camera->Front) * 5.0f;
+	glm::vec3 target = camera.Position + glm::normalize(camera.Front) * 5.0f;
 	glm::vec3 block_pos = glm::floor(target);
 
 	block.set_position(block_pos);
@@ -192,5 +190,5 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 	lastY = ypos;
 
 	// ---------------- conflicting line, think about this one
-	camera->ProcessMouseMovement(xoffset, yoffset);
+	camera.ProcessMouseMovement(xoffset, yoffset);
 }
