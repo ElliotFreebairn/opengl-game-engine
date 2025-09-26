@@ -10,7 +10,7 @@
 class GameObject {
 
 public:
-  glm::vec3 Position; 
+  glm::vec3 Position;
   glm::vec3 Colour;
 
   Texture2D Sprite;

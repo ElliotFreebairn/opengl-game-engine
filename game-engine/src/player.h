@@ -21,8 +21,7 @@ public:
 
     void set_position(float x, float y, float z);
 
-    void process_inputs(GLFWwindow* window, float deltaTime);
-    void process_mouse_movement(GLFWwindow* window, float xoffset, float yoffset);
+    void process_mouse_movement(float xoffset, float yoffset);
 
 private:
     Camera camera;
