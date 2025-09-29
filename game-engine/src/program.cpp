@@ -33,6 +33,7 @@ std::uniform_real_distribution<float> distribution(-2.0f, 2.0f);
 void frame_buffer_size_callback(GLFWwindow *window, int width, int height);
 void mouse_callback(GLFWwindow *window, double xpos, double ypos);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 Game game;
 // Player camera
@@ -63,6 +64,7 @@ int main()
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetMouseButtonCallback(window, mouse_button_callback);
 
 	/* Initialize GLAD - deals  with function pointers for opengl */
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -73,14 +75,6 @@ int main()
 
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	glEnable(GL_DEPTH_TEST);
-
-	// ------------------------ ned to clean up this part
-	// Shader shader = ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "rectangle");
-	// ResourceManager::LoadTexture("resources/textures/block.jpg", true, "block");
-
-	// Rectangle shooting_block("rectangle", "block");
-	// shooting_block.set_position(camera.Position + glm::normalize(camera.Front) * 2.0f);
-	// shooting_velocity = glm::normalize(camera.Front) * 3.0f; // 10 units per second
 
 	game.Init();
 
@@ -98,22 +92,6 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		game.Render();
 		glfwSwapBuffers(window);
-
-
-		// glm::mat4 projection;
-		// projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);
-
-		// shader.SetMatrix4("projection", projection);
-		// shooting_block.Position += shooting_velocity * deltaTime;
-
-		// glm::mat4 view = camera.GetViewMatrix();
-		// shader.SetMatrix4("view", view);
-
-		// shooting_block.draw();
-		// for (Rectangle &block : blocks)
-		// {
-		// 	block.draw();
-		// }
 	}
 
 	ResourceManager::Clear();
@@ -122,32 +100,6 @@ int main()
 
 	return 0;
 }
-
-// maybe create a input handler class?
-// void place_block()
-// {
-// 	Rectangle block("rectangle", "block");
-
-// 	// Position a ceratin distance in front of the player
-// 	glm::vec3 target = camera.Position + glm::normalize(camera.Front) * 5.0f;
-// 	glm::vec3 block_pos = glm::floor(target);
-
-// 	block.Position = block_pos;
-// 	blocks.push_back(block);
-// }
-
-// Rectangle shoot_block(std::string shader_name, std::string texture_name)
-// {
-// 	Rectangle block(shader_name, texture_name);
-
-// 	// Position a certain distance in front of the player
-// 	glm::vec3 target = camera.Position + glm::normalize(camera.Front) * 5.0f;
-// 	glm::vec3 block_pos = glm::floor(target);
-
-// 	block.set_position(block_pos);
-// 	blocks.push_back(block);
-// 	return block;
-// }
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
@@ -163,6 +115,15 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 			game.keys[key] = false;
 		}
 	}
+}
+
+void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
+    if (button >= 0 && button < 1024) {
+        if (action == GLFW_PRESS)
+            game.keys[button] = true;
+        else if (action == GLFW_RELEASE)
+            game.keys[button] = false;
+    }
 }
 
 

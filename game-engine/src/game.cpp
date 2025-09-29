@@ -4,14 +4,20 @@
 #include "player.h"
 #include "rectangle.h"
 
+#include <vector>
+
 #include <glm/glm.hpp>
 
 // Game-related data
 Player *player;
 glm::vec3 shooting_velocity(0.0f);
 
+Rectangle shoot_block(std::string shader_name, std::string texture_name);
+
 // Blocks
 Rectangle *bullet_block;
+std::vector<Rectangle> blocks;
+float last_block_place = 0.0f;
 
 Game::Game()
     : keys(), width(800), height(600)
@@ -49,7 +55,6 @@ void Game::Update(float deltaTime)
 {
     // Update game state
     bullet_block->Position += shooting_velocity * deltaTime;
-    std::cout << player->get_position().x << ", " << player->get_position().y << ", " << player->get_position().z << std::endl;
 }
 
 void Game::Render()
@@ -65,6 +70,11 @@ void Game::Render()
     shader.SetMatrix4("view", view);
     // Draw calls would go here
     bullet_block->draw();
+
+    for (Rectangle &block : blocks)
+    {
+        block.draw();
+    }
 }
 
 void Game::ProcessInput(float dt)
@@ -78,10 +88,29 @@ void Game::ProcessInput(float dt)
         player->get_camera().ProcessKeyboard(LEFT, dt);
     if (keys[GLFW_KEY_D])
         player->get_camera().ProcessKeyboard(RIGHT, dt);
+    if (keys[GLFW_MOUSE_BUTTON_LEFT]) {
+        if (glfwGetTime() - last_block_place > 0.1f) {
+            shoot_block("rectangle", "block");
+            last_block_place = glfwGetTime();
+        }
+    }
 }
 
 void Game::ProcessMouseInput(float xoffset, float yoffset)
 {
     player->get_camera().ProcessMouseMovement(xoffset, yoffset);
 
+}
+
+Rectangle shoot_block(std::string shader_name, std::string texture_name)
+{
+	Rectangle block(shader_name, texture_name);
+
+	// Position a certain distance in front of the player
+	glm::vec3 target = player->get_camera().Position + glm::normalize(player->get_camera().Front) * 5.0f;
+	glm::vec3 block_pos = glm::floor(target);
+
+	block.set_position(block_pos);
+	blocks.push_back(block);
+	return block;
 }
