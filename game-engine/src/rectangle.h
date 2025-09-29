@@ -8,10 +8,11 @@
 
 class Rectangle: public GameObject {
 public:
-  Rectangle(std::string shader_name, std::string texture_name); 
-  
+  Rectangle() {};
+  Rectangle(std::string shader_name, std::string texture_name);
+
   void init_data(std::string shader_name, std::string texture_name);
-  
+
   void draw();
 
   Shader shader;

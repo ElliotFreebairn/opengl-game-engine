@@ -15,7 +15,7 @@ void Rectangle::draw() {
   model = glm::translate(model, this->Position);
   model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.5f));
   this->shader.SetMatrix4("model", model);
-  
+
   //this->shader.SetVector3f("spriteColor", this->Colour);
 
   glActiveTexture(GL_TEXTURE0);

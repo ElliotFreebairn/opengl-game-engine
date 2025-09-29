@@ -62,6 +62,7 @@ int main()
 	glfwSetFramebufferSizeCallback(window, frame_buffer_size_callback);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetKeyCallback(window, key_callback);
 
 	/* Initialize GLAD - deals  with function pointers for opengl */
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -79,10 +80,9 @@ int main()
 
 	// Rectangle shooting_block("rectangle", "block");
 	// shooting_block.set_position(camera.Position + glm::normalize(camera.Front) * 2.0f);
-	// shooting_velocity = glm::normalize(camera.Front) * 3.0f; // 10 units per secon
+	// shooting_velocity = glm::normalize(camera.Front) * 3.0f; // 10 units per second
 
 	game.Init();
-
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -96,9 +96,9 @@ int main()
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		game.Render();
 		glfwSwapBuffers(window);
 
-		game.Render();
 
 		// glm::mat4 projection;
 		// projection = glm::perspective(glm::radians(camera.Zoom), (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT, 0.1f, 100.0f);

@@ -1,10 +1,10 @@
 #include "player.h"
 
 
-Player::Player()
+Player::Player() : camera(glm::vec3(0.0f, 0.0f, 0.0f))
 {
     set_position(0.0f, 0.0f, 0.0f);
-    camera = *new Camera(get_position());
+    std::cout << camera.Position.x << ", " << camera.Position.y << ", " << camera.Position.z << std::endl;
 }
 
 void Player::set_position(float x, float y, float z)
