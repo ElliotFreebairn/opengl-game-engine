@@ -9,6 +9,7 @@
 #include "rectangle.h"
 #include "camera.h"
 #include "player.h"
+#include "ui-manager.h"
 
 #include <iostream>
 #include <vector>
@@ -78,6 +79,8 @@ int main()
 
 	game.Init();
 
+	UIManager ui_manager(SCREEN_WIDTH, SCREEN_HEIGHT);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();
@@ -90,7 +93,10 @@ int main()
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 		game.Render();
+		ui_manager.Render();
+
 		glfwSwapBuffers(window);
 	}
 

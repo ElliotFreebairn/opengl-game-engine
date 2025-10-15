@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include "shader.h"
 /*
     UIManager should handle all aspects of the user interface, including rendering UI elements,
     managing user input for UI interactions, and updating UI states.
@@ -12,12 +13,14 @@
 class UIManager {
 
 public:
-    UIManager();
+    UIManager(const int width, const int height);
     ~UIManager();
 
     void Render();
     void Update(float deltaTime);
 private:
-    // Add private members and methods as needed
+    Shader shader;
+    int screenWidth;
+    int screenHeight;
 };
 #endif
