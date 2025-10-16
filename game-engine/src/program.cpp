@@ -80,7 +80,8 @@ int main()
 	game.Init();
 
 	UIManager ui_manager(SCREEN_WIDTH, SCREEN_HEIGHT);
-
+    ui_manager.Init();
+    
 	while (!glfwWindowShouldClose(window))
 	{
 		float currentFrame = glfwGetTime();

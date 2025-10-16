@@ -5,14 +5,16 @@
 #include <GLFW/glfw3.h>
 
 
-Button::Button() {
+Button::Button(glm::vec3 colour, glm::vec2 position, glm::vec2 size) {
+    this->colour = colour;
+    this->position = position;
+    this->size = size;
     init_data();
 }
 
 Button::~Button() = default;
 
-void Button::draw(Shader &shader, Texture2D &texture, glm::vec2 position, glm::vec2 size, glm::vec3 colour) {
-
+void Button::draw(Shader &shader, Texture2D &texture) {
     shader.Use();
     glm::mat4 model = glm::mat4(1.0f); // creates the 4 x 4 identity matrix
     model = glm::translate(model, glm::vec3(position, 0.0f));

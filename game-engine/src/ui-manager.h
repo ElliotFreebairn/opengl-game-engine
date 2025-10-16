@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 
+#include <list>
 #include "shader.h"
 /*
     UIManager should handle all aspects of the user interface, including rendering UI elements,
@@ -18,6 +19,7 @@ public:
 
     void Render();
     void Update(float deltaTime);
+    void Init();
 private:
     Shader shader;
     int screenWidth;
