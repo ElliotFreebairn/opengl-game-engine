@@ -24,9 +24,14 @@ void UIManager::Init() {
 
 UIManager::~UIManager() = default;
 
-void UIManager::Update(float deltaTime) {
+void UIManager::Update(float deltaTime, float xpos, float ypos) {
     // Implement update logic for UI elements based on deltaTime
     // update should call is mouseInside in button, and maybe change a flag
+
+    for (Button btn : buttons)
+    {
+       btn.is_mouse_inside(xpos, ypos); 
+    }
 
 }
 
@@ -39,7 +44,6 @@ void UIManager::Render() {
     Shader shader = ResourceManager::GetShader("ui");
     Texture2D texture;
 
-    std::cout << "Button count " << buttons.size();
     for (Button btn : buttons)
     {
         btn.draw(shader, texture);

@@ -18,7 +18,7 @@ public:
     ~UIManager();
 
     void Render();
-    void Update(float deltaTime);
+    void Update(float deltaTime, float xpos, float ypos);
     void Init();
 private:
     Shader shader;

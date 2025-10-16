@@ -14,6 +14,31 @@ Button::Button(glm::vec3 colour, glm::vec2 position, glm::vec2 size) {
 
 Button::~Button() = default;
 
+void Button::print_button_dimensions()
+{
+    std::cout << "Top left x = " << position.x <<
+        " Top right x = " << position.x + size.x <<
+        " Top left y = " << position.y <<
+        " Bottom left y = " << position.y + size.y << std::endl;
+}
+
+bool Button::is_mouse_inside(float xpos, float ypos) {
+    
+    // top left of button is position.x
+    // top right is position.x + width
+    // top left is position.y
+    // bottom left is position.y + height
+
+    //print_button_dimensions();
+    std::cout << "XPOS = " << xpos << " YPOS = " << ypos << std::endl;
+    if ((xpos  > position.x && xpos < position.x + size.x) &&
+        (ypos < position.y && ypos > position.y + size.y))
+    {
+        std::cout << "MOUSE IS INSIDE" << std::endl;
+    }
+    return false;
+}
+
 void Button::draw(Shader &shader, Texture2D &texture) {
     shader.Use();
     glm::mat4 model = glm::mat4(1.0f); // creates the 4 x 4 identity matrix

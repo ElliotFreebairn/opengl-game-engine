@@ -78,7 +78,6 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	game.Init();
-
 	UIManager ui_manager(SCREEN_WIDTH, SCREEN_HEIGHT);
     ui_manager.Init();
     
@@ -92,6 +91,7 @@ int main()
 		game.ProcessInput(deltaTime);
 		game.Update(deltaTime);
 
+        ui_manager.Update(deltaTime, lastX, lastY);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
