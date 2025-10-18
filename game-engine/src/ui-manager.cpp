@@ -11,15 +11,29 @@ std::list<Button> buttons;
 UIManager::UIManager(const int width, const int height) {
     screenWidth = width;
     screenHeight = height;
-    ResourceManager::LoadShader("shaders/vertex_ui.vs", "shaders/fragment_ui.fs", "ui");
+}
+
+UIManager::UIManager() : keys(), screenWidth(800), screenHeight(600)
+{
 }
 
 void UIManager::Init() {
+    ResourceManager::LoadShader("shaders/vertex_ui.vs", "shaders/fragment_ui.fs", "ui");
     glm::vec2 position(0.0f, screenHeight * 2.0f / 3.0f);
     glm::vec2 size(screenWidth, screenHeight / 3.0f);
     glm::vec3 colour(0.0f, 0.0f, 1.0f);
     Button button(colour, position, size);
     buttons.push_front(button);
+
+}
+
+void UIManager::ProcessInput(GLFWwindow *window)
+{
+    if (keys[GLFW_KEY_SPACE])
+    {
+        std::cout << "Disabling cusor" << std::endl;
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
 }
 
 UIManager::~UIManager() = default;
@@ -30,6 +44,7 @@ void UIManager::Update(float deltaTime, float xpos, float ypos) {
 
     for (Button btn : buttons)
     {
+       std::cout << "hello";
        btn.is_mouse_inside(xpos, ypos); 
     }
 

@@ -14,12 +14,16 @@
 class UIManager {
 
 public:
+    UIManager();
     UIManager(const int width, const int height);
     ~UIManager();
 
     void Render();
     void Update(float deltaTime, float xpos, float ypos);
+    void ProcessInput(GLFWwindow* window);
     void Init();
+
+    bool keys[1024];
 private:
     Shader shader;
     int screenWidth;

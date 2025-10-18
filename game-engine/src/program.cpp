@@ -37,6 +37,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
 
 Game game;
+UIManager ui_manager;
 // Player camera
 // Player current_player;
 // Camera &camera = current_player.get_camera();
@@ -78,7 +79,6 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 
 	game.Init();
-	UIManager ui_manager(SCREEN_WIDTH, SCREEN_HEIGHT);
     ui_manager.Init();
     
 	while (!glfwWindowShouldClose(window))
@@ -91,6 +91,7 @@ int main()
 		game.ProcessInput(deltaTime);
 		game.Update(deltaTime);
 
+        ui_manager.ProcessInput(window);
         ui_manager.Update(deltaTime, lastX, lastY);
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -115,8 +116,10 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 		glfwSetWindowShouldClose(window, true);
 	if (key >= 0 && key < 1024)
 	{
-		if (action == GLFW_PRESS)
+		if (action == GLFW_PRESS) {
 			game.keys[key] = true;
+            ui_manager.keys[key] = true; 
+        }
 		else if(action == GLFW_RELEASE)
 		{
 			game.keys[key] = false;
