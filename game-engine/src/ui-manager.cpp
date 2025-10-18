@@ -21,7 +21,7 @@ void UIManager::Init() {
     ResourceManager::LoadShader("shaders/vertex_ui.vs", "shaders/fragment_ui.fs", "ui");
     glm::vec2 position(0.0f, screenHeight * 2.0f / 3.0f);
     glm::vec2 size(screenWidth, screenHeight / 3.0f);
-    glm::vec3 colour(0.0f, 0.0f, 1.0f);
+    glm::vec3 colour(0.0f, 1.0f, 0.0f);
     Button button(colour, position, size);
     buttons.push_front(button);
 
@@ -31,7 +31,6 @@ void UIManager::ProcessInput(GLFWwindow *window)
 {
     if (keys[GLFW_KEY_SPACE])
     {
-        std::cout << "Disabling cusor" << std::endl;
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
 }
@@ -42,9 +41,8 @@ void UIManager::Update(float deltaTime, float xpos, float ypos) {
     // Implement update logic for UI elements based on deltaTime
     // update should call is mouseInside in button, and maybe change a flag
 
-    for (Button btn : buttons)
+    for (Button &btn : buttons)
     {
-       std::cout << "hello";
        btn.is_mouse_inside(xpos, ypos); 
     }
 
@@ -59,7 +57,7 @@ void UIManager::Render() {
     Shader shader = ResourceManager::GetShader("ui");
     Texture2D texture;
 
-    for (Button btn : buttons)
+    for (Button &btn : buttons)
     {
         btn.draw(shader, texture);
     }

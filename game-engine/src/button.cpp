@@ -23,18 +23,18 @@ void Button::print_button_dimensions()
 }
 
 bool Button::is_mouse_inside(float xpos, float ypos) {
-    
-    // top left of button is position.x
-    // top right is position.x + width
-    // top left is position.y
-    // bottom left is position.y + height
+    float leftX = position.x;
+    float rightX = position.x + size.x;
+    float topY = position.y;
+    float bottomY = position.y + size.y;
 
-    //print_button_dimensions();
-    std::cout << "XPOS = " << xpos << " YPOS = " << ypos << std::endl;
-    if ((xpos  > position.x && xpos < position.x + size.x) &&
-        (ypos < position.y && ypos > position.y + size.y))
+    if ((xpos  > leftX && xpos < rightX) &&
+        (ypos > topY && ypos < bottomY))
     {
-        std::cout << "MOUSE IS INSIDE" << std::endl;
+        set_colour(glm::vec3(1.0f, 0.0f, 0.0f));
+        return true;
+    } else {
+        set_colour(glm::vec3(0.0f, 1.0f, 0.0f));
     }
     return false;
 }
@@ -45,6 +45,8 @@ void Button::draw(Shader &shader, Texture2D &texture) {
     model = glm::translate(model, glm::vec3(position, 0.0f));
 
     model = glm::scale(model, glm::vec3(size, 1.0f));
+
+    std::cout << "button colour " << colour.x << " " << colour.y << " " << colour.z << std::endl;
 
     shader.SetMatrix4("model", model);
     shader.SetVector3f("spriteColor", colour);
@@ -88,4 +90,9 @@ void Button::init_data() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+}
+
+void Button::set_colour(glm::vec3 colour)
+{
+    this->colour = colour;
 }

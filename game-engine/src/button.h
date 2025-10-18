@@ -19,6 +19,15 @@ public:
     bool is_mouse_inside(float xpos, float ypos);
     // maybe create some kind of onMouseEnter function (or adjacent)
     
+    // setters
+    void set_colour(glm::vec3 colour);
+    void set_position(glm::vec2 position);
+    void set_size(glm::vec2 size);
+
+    // getters
+    glm::vec3 get_colour();
+    glm::vec2 get_position();
+    glm::vec2 get_size();
 private:
     glm::vec3 colour;
     glm::vec2 position;
