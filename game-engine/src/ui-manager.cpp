@@ -31,7 +31,16 @@ void UIManager::ProcessInput(GLFWwindow *window)
 {
     if (keys[GLFW_KEY_SPACE])
     {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        if (!active)
+        {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+            keys[GLFW_KEY_SPACE] = false;
+            active = true;
+        } else {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            keys[GLFW_KEY_SPACE] = false;
+            active = false;
+        }
     }
 }
 
@@ -43,7 +52,7 @@ void UIManager::Update(float deltaTime, float xpos, float ypos) {
 
     for (Button &btn : buttons)
     {
-       btn.is_mouse_inside(xpos, ypos); 
+       btn.is_mouse_inside(xpos, ypos);
     }
 
 }
@@ -57,6 +66,7 @@ void UIManager::Render() {
     Shader shader = ResourceManager::GetShader("ui");
     Texture2D texture;
 
+
     for (Button &btn : buttons)
     {
         btn.draw(shader, texture);
@@ -69,3 +79,9 @@ void UIManager::Render() {
 
     //button.draw(shader, texture, position, size, color);
 }
+
+bool UIManager::is_active()
+{
+    return active;
+}
+

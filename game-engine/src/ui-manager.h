@@ -22,11 +22,14 @@ public:
     void Update(float deltaTime, float xpos, float ypos);
     void ProcessInput(GLFWwindow* window);
     void Init();
+    
+    bool is_active();
 
     bool keys[1024];
 private:
     Shader shader;
     int screenWidth;
     int screenHeight;
+    bool active;
 };
 #endif

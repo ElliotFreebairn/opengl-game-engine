@@ -88,8 +88,13 @@ int main()
 		lastFrame = currentFrame;
 		glfwPollEvents(); // checks if any events are triggered (keyboard or mousemovement), calls functions via callback methods
 
-		game.ProcessInput(deltaTime);
-		game.Update(deltaTime);
+
+        if (!ui_manager.is_active())
+        {
+            game.ProcessInput(deltaTime);
+        } 
+
+        game.Update(deltaTime);
 
         ui_manager.ProcessInput(window);
         ui_manager.Update(deltaTime, lastX, lastY);
@@ -98,7 +103,8 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		game.Render();
-		ui_manager.Render();
+        std::cout << "ui manager is " << ui_manager.is_active();
+		if (ui_manager.is_active()) ui_manager.Render();
 
 		glfwSwapBuffers(window);
 	}
@@ -156,7 +162,8 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 	lastX = xpos;
 	lastY = ypos;
 
-	game.ProcessMouseInput(xoffset, yoffset);
+
+	if (!ui_manager.is_active()) game.ProcessMouseInput(xoffset, yoffset);
 }
 
 // resizes viewport when user resizes the glfw window

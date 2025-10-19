@@ -46,8 +46,6 @@ void Button::draw(Shader &shader, Texture2D &texture) {
 
     model = glm::scale(model, glm::vec3(size, 1.0f));
 
-    std::cout << "button colour " << colour.x << " " << colour.y << " " << colour.z << std::endl;
-
     shader.SetMatrix4("model", model);
     shader.SetVector3f("spriteColor", colour);
 
