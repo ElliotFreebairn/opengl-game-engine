@@ -136,10 +136,14 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods) {
     if (button >= 0 && button < 1024) {
-        if (action == GLFW_PRESS)
+        if (action == GLFW_PRESS) {
             game.keys[button] = true;
-        else if (action == GLFW_RELEASE)
+            ui_manager.keys[button] = true;
+        }
+        else if (action == GLFW_RELEASE) {
             game.keys[button] = false;
+            ui_manager.keys[button] = false;
+        }
     }
 }
 

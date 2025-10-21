@@ -24,7 +24,6 @@ void UIManager::Init() {
     glm::vec3 colour(0.0f, 1.0f, 0.0f);
     Button button(colour, position, size);
     buttons.push_front(button);
-
 }
 
 void UIManager::ProcessInput(GLFWwindow *window)
@@ -52,7 +51,10 @@ void UIManager::Update(float deltaTime, float xpos, float ypos) {
 
     for (Button &btn : buttons)
     {
-       btn.is_mouse_inside(xpos, ypos);
+        if(btn.is_mouse_inside(xpos, ypos) && keys[GLFW_MOUSE_BUTTON_LEFT])
+        {
+            std::cout << "SHOOTING!!!" << std::endl;
+        }
     }
 
 }
