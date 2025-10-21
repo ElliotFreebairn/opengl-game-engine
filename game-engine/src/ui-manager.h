@@ -7,6 +7,7 @@
 
 #include <list>
 #include "shader.h"
+#include "game.h"
 /*
     UIManager should handle all aspects of the user interface, including rendering UI elements,
     managing user input for UI interactions, and updating UI states.
@@ -19,7 +20,7 @@ public:
     ~UIManager();
 
     void Render();
-    void Update(float deltaTime, float xpos, float ypos);
+    void Update(float deltaTime, float xpos, float ypos, Game &game);
     void ProcessInput(GLFWwindow* window);
     void Init();
     

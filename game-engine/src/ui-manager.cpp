@@ -45,7 +45,7 @@ void UIManager::ProcessInput(GLFWwindow *window)
 
 UIManager::~UIManager() = default;
 
-void UIManager::Update(float deltaTime, float xpos, float ypos) {
+void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
     // Implement update logic for UI elements based on deltaTime
     // update should call is mouseInside in button, and maybe change a flag
 
@@ -53,7 +53,7 @@ void UIManager::Update(float deltaTime, float xpos, float ypos) {
     {
         if(btn.is_mouse_inside(xpos, ypos) && keys[GLFW_MOUSE_BUTTON_LEFT])
         {
-            std::cout << "SHOOTING!!!" << std::endl;
+            game.spawn_block("rectangle", "block", true);
         }
     }
 

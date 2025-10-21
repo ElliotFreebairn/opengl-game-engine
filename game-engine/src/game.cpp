@@ -12,10 +12,10 @@
 Player *player;
 glm::vec3 shooting_velocity(0.0f);
 
-Rectangle shoot_block(std::string shader_name, std::string texture_name);
-
 // Blocks
-Rectangle *bullet_block;
+//Rectangle *bullet_block;
+
+std::vector<Rectangle> shooting_blocks;
 std::vector<Rectangle> blocks;
 float last_block_place = 0.0f;
 
@@ -46,15 +46,17 @@ void Game::Init()
     // Block creation
     Camera& camera = player->get_camera();
 
-    bullet_block = new Rectangle("rectangle", "block");
-    bullet_block->set_position(camera.Position + glm::normalize(camera.Front) * 2.0f);
     shooting_velocity = glm::normalize(camera.Front) * 3.0f; // 10 units per second
 }
 
 void Game::Update(float deltaTime)
 {
     // Update game state
-    bullet_block->Position += shooting_velocity * deltaTime;
+    for (Rectangle &block : shooting_blocks)
+    {
+        block.Position += shooting_velocity * deltaTime;
+    }
+    //bullet_block->Position += shooting_velocity * deltaTime;
 }
 
 void Game::Render()
@@ -69,9 +71,14 @@ void Game::Render()
     glm::mat4 view = player->get_camera().GetViewMatrix();
     shader.SetMatrix4("view", view);
     // Draw calls would go here
-    bullet_block->draw();
+    // bullet_block->draw();
 
     for (Rectangle &block : blocks)
+    {
+        block.draw();
+    }
+
+    for (Rectangle &block : shooting_blocks)
     {
         block.draw();
     }
@@ -90,7 +97,7 @@ void Game::ProcessInput(float dt)
         player->get_camera().ProcessKeyboard(RIGHT, dt);
     if (keys[GLFW_MOUSE_BUTTON_LEFT]) {
         if (glfwGetTime() - last_block_place > 0.1f) {
-            shoot_block("rectangle", "block");
+            spawn_block("rectangle", "block");
             last_block_place = glfwGetTime();
         }
     }
@@ -102,7 +109,7 @@ void Game::ProcessMouseInput(float xoffset, float yoffset)
 
 }
 
-Rectangle shoot_block(std::string shader_name, std::string texture_name)
+void Game::spawn_block(std::string shader_name, std::string texture_name, bool shooting_block)
 {
 	Rectangle block(shader_name, texture_name);
 
@@ -111,6 +118,11 @@ Rectangle shoot_block(std::string shader_name, std::string texture_name)
 	glm::vec3 block_pos = glm::floor(target);
 
 	block.set_position(block_pos);
-	blocks.push_back(block);
-	return block;
+
+    if (shooting_block)
+    {
+        shooting_blocks.push_back(block);
+    } else {
+        blocks.push_back(block);
+    }
 }

@@ -97,7 +97,7 @@ int main()
         game.Update(deltaTime);
 
         ui_manager.ProcessInput(window);
-        ui_manager.Update(deltaTime, lastX, lastY);
+        ui_manager.Update(deltaTime, lastX, lastY, game);
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

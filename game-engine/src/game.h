@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include <string>
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -21,5 +23,7 @@ public:
     void ProcessMouseInput(float xoffset, float yoffset);
     void Update(float deltaTime);
     void Render();
+    void spawn_block(std::string shader_name, std::string texture_name, bool shooting_block = false);
+
 };
 #endif
