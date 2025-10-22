@@ -23,18 +23,23 @@ public:
     void set_colour(glm::vec3 colour);
     void set_position(glm::vec2 position);
     void set_size(glm::vec2 size);
+    void activate();
+    void deactivate();
 
     // getters
     glm::vec3 get_colour();
     glm::vec2 get_position();
     glm::vec2 get_size();
+    bool is_activated();
+
+
 private:
     glm::vec3 colour;
     glm::vec2 position;
     glm::vec2 size;
 
     bool mouse_inside = false;
-
+    bool activated = false;
     void print_button_dimensions();
 };
 

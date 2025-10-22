@@ -53,7 +53,11 @@ void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
     {
         if(btn.is_mouse_inside(xpos, ypos) && keys[GLFW_MOUSE_BUTTON_LEFT])
         {
+            btn.activate();
             game.spawn_block("rectangle", "block", true);
+        } else if(btn.is_mouse_inside(xpos, ypos) && !keys[GLFW_MOUSE_BUTTON_LEFT])
+        {
+            btn.deactivate();
         }
     }
 

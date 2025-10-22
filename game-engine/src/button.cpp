@@ -31,7 +31,6 @@ bool Button::is_mouse_inside(float xpos, float ypos) {
     if ((xpos  > leftX && xpos < rightX) &&
         (ypos > topY && ypos < bottomY))
     {
-        set_colour(glm::vec3(1.0f, 0.0f, 0.0f));
         return true;
     } else {
         set_colour(glm::vec3(0.0f, 1.0f, 0.0f));
@@ -93,4 +92,16 @@ void Button::init_data() {
 void Button::set_colour(glm::vec3 colour)
 {
     this->colour = colour;
+}
+
+void Button::activate()
+{
+    set_colour(glm::vec3(1.0f, 0.0f, 0.0f));
+    this->activated = true;
+}
+
+void Button::deactivate()
+{
+    set_colour(glm::vec3(0.0f, 1.0f, 0.0f)); 
+    this->activated = false;
 }
