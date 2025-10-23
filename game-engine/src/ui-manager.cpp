@@ -22,7 +22,9 @@ void UIManager::Init() {
     glm::vec2 position(screenWidth / 3.0f, screenHeight / 1.3f);
     glm::vec2 size(screenWidth / 4, screenHeight / 10.0f);
     glm::vec4 colour(0.5f, 0.5f, 0.5f, 1.0f);
+
     Button button(colour, position, size);
+    button.set_visibility(true);
     buttons.push_front(button);
 }
 
@@ -47,7 +49,7 @@ UIManager::~UIManager() = default;
 void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
     for (Button &btn : buttons)
     {
-        if (btn.is_clicked(xpos, ypos, keys))
+        if (btn.is_visible() && btn.is_clicked(xpos, ypos, keys))
         {
             game.spawn_block("rectangle", "block", true);
         }
@@ -63,10 +65,9 @@ void UIManager::Render() {
     Shader shader = ResourceManager::GetShader("ui");
     Texture2D texture;
 
-
     for (Button &btn : buttons)
     {
-        btn.draw(shader, texture);
+        if(btn.is_visible()) btn.draw(shader, texture);
     }
 }
 

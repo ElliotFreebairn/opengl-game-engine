@@ -24,8 +24,7 @@ public:
     void set_colour(glm::vec4 colour);
     void set_position(glm::vec2 position);
     void set_size(glm::vec2 size);
-    void activate();
-    void deactivate();
+    void set_visibility(bool visible);
 
     // getters
     glm::vec4 get_colour();
@@ -33,6 +32,7 @@ public:
     glm::vec2 get_size();
     bool is_activated();
     bool is_draggable();
+    bool is_visible();
 
 
 private:
@@ -40,6 +40,7 @@ private:
     glm::vec2 position;
     glm::vec2 size;
 
+    bool visible = false;
     bool inside = false;
     bool clicked = false;
     bool draggable = false;

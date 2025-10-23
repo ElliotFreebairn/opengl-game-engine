@@ -92,3 +92,13 @@ void Button::set_colour(glm::vec4 colour)
 {
     this->colour = colour;
 }
+
+bool Button::is_visible()
+{
+    return visible;
+}
+
+void Button::set_visibility(bool visible)
+{
+    this->visible = visible;
+}
