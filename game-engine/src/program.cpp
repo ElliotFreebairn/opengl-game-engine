@@ -77,6 +77,8 @@ int main()
 
 	glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	glEnable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 
 	game.Init();
     ui_manager.Init();
@@ -103,7 +105,6 @@ int main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		game.Render();
-        std::cout << "ui manager is " << ui_manager.is_active();
 		if (ui_manager.is_active()) ui_manager.Render();
 
 		glfwSwapBuffers(window);

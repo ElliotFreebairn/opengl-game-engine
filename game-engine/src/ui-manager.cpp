@@ -19,9 +19,9 @@ UIManager::UIManager() : keys(), screenWidth(800), screenHeight(600)
 
 void UIManager::Init() {
     ResourceManager::LoadShader("shaders/vertex_ui.vs", "shaders/fragment_ui.fs", "ui");
-    glm::vec2 position(0.0f, screenHeight * 2.0f / 3.0f);
-    glm::vec2 size(screenWidth, screenHeight / 3.0f);
-    glm::vec3 colour(0.0f, 1.0f, 0.0f);
+    glm::vec2 position(screenWidth / 3.0f, screenHeight / 1.3f);
+    glm::vec2 size(screenWidth / 4, screenHeight / 10.0f);
+    glm::vec4 colour(0.5f, 0.5f, 0.5f, 1.0f);
     Button button(colour, position, size);
     buttons.push_front(button);
 }

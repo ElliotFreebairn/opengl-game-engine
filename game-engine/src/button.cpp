@@ -5,7 +5,7 @@
 #include <GLFW/glfw3.h>
 
 
-Button::Button(glm::vec3 colour, glm::vec2 position, glm::vec2 size) {
+Button::Button(glm::vec4 colour, glm::vec2 position, glm::vec2 size) {
     this->colour = colour;
     this->position = position;
     this->size = size;
@@ -33,7 +33,7 @@ bool Button::is_mouse_inside(float xpos, float ypos) {
     {
         return true;
     } else {
-        set_colour(glm::vec3(0.0f, 1.0f, 0.0f));
+        set_colour();
     }
     return false;
 }
@@ -46,7 +46,8 @@ void Button::draw(Shader &shader, Texture2D &texture) {
     model = glm::scale(model, glm::vec3(size, 1.0f));
 
     shader.SetMatrix4("model", model);
-    shader.SetVector3f("spriteColor", colour);
+    std::cout << colour.x << " " << colour.y << " " << colour.z << " " << colour.w << std::endl;
+    shader.SetVector4f("spriteColor", colour);
 
     glActiveTexture(GL_TEXTURE0);
     texture.Bind();
@@ -89,19 +90,24 @@ void Button::init_data() {
     glBindVertexArray(0);
 }
 
-void Button::set_colour(glm::vec3 colour)
+void Button::set_colour()
 {
-    this->colour = colour;
+    if (activated)
+    {
+        this->colour = glm::vec4(0.5f, 0.5f, 0.5f, 0.3f);
+    } else {
+        this->colour = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
+    }
 }
 
 void Button::activate()
 {
-    set_colour(glm::vec3(1.0f, 0.0f, 0.0f));
     this->activated = true;
+    set_colour();
 }
 
 void Button::deactivate()
 {
-    set_colour(glm::vec3(0.0f, 1.0f, 0.0f)); 
     this->activated = false;
+    set_colour();
 }

@@ -10,7 +10,7 @@
 
 class Button : public UI {
 public:
-    Button(glm::vec3 colour, glm::vec2 position, glm::vec2 size);
+    Button(glm::vec4 colour, glm::vec2 position, glm::vec2 size);
     ~Button();
 
     void draw(Shader &shader, Texture2D &texture);
@@ -20,21 +20,21 @@ public:
     // maybe create some kind of onMouseEnter function (or adjacent)
     
     // setters
-    void set_colour(glm::vec3 colour);
+    void set_colour();
     void set_position(glm::vec2 position);
     void set_size(glm::vec2 size);
     void activate();
     void deactivate();
 
     // getters
-    glm::vec3 get_colour();
+    glm::vec4 get_colour();
     glm::vec2 get_position();
     glm::vec2 get_size();
     bool is_activated();
 
 
 private:
-    glm::vec3 colour;
+    glm::vec4 colour;
     glm::vec2 position;
     glm::vec2 size;
 
