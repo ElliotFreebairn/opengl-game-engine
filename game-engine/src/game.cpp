@@ -42,15 +42,12 @@ void Game::Init()
 
     // Initialize player
     player = new Player();
-
-    // Block creation
-    Camera& camera = player->get_camera();
-
-    shooting_velocity = glm::normalize(camera.Front) * 3.0f; // 10 units per second
 }
 
 void Game::Update(float deltaTime)
 {
+    shooting_velocity = glm::normalize(player->get_camera().Front) * 3.0f; // 10 units per second
+
     // Update game state
     for (Rectangle &block : shooting_blocks)
     {
@@ -86,7 +83,6 @@ void Game::Render()
 
 void Game::ProcessInput(float dt)
 {
-    float velocity = 500.0f;
     if (keys[GLFW_KEY_W])
         player->get_camera().ProcessKeyboard(FORWARD, dt);
     if (keys[GLFW_KEY_S])
@@ -106,7 +102,6 @@ void Game::ProcessInput(float dt)
 void Game::ProcessMouseInput(float xoffset, float yoffset)
 {
     player->get_camera().ProcessMouseMovement(xoffset, yoffset);
-
 }
 
 void Game::spawn_block(std::string shader_name, std::string texture_name, bool shooting_block)
