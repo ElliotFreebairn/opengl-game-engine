@@ -13,14 +13,15 @@ public:
     Button(glm::vec4 colour, glm::vec2 position, glm::vec2 size);
     ~Button();
 
+    // core ui methods
     void draw(Shader &shader, Texture2D &texture);
     void init_data() override;
-   
-    bool is_mouse_inside(float xpos, float ypos);
-    // maybe create some kind of onMouseEnter function (or adjacent)
+  
+    // interface between ui and the button
+    bool is_clicked(float xpos, float ypos, bool keys[]);
     
     // setters
-    void set_colour();
+    void set_colour(glm::vec4 colour);
     void set_position(glm::vec2 position);
     void set_size(glm::vec2 size);
     void activate();
@@ -31,6 +32,7 @@ public:
     glm::vec2 get_position();
     glm::vec2 get_size();
     bool is_activated();
+    bool is_draggable();
 
 
 private:
@@ -38,9 +40,10 @@ private:
     glm::vec2 position;
     glm::vec2 size;
 
-    bool mouse_inside = false;
-    bool activated = false;
-    void print_button_dimensions();
-};
+    bool inside = false;
+    bool clicked = false;
+    bool draggable = false;
 
+    bool is_inside(float xpos, float ypos);
+};
 #endif

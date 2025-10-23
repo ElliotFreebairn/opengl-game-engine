@@ -31,6 +31,6 @@ private:
     Shader shader;
     int screenWidth;
     int screenHeight;
-    bool active;
+    bool active = false;
 };
 #endif

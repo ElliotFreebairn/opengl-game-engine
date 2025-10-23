@@ -30,37 +30,28 @@ void UIManager::ProcessInput(GLFWwindow *window)
 {
     if (keys[GLFW_KEY_SPACE])
     {
-        if (!active)
-        {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-            keys[GLFW_KEY_SPACE] = false;
-            active = true;
-        } else {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-            keys[GLFW_KEY_SPACE] = false;
-            active = false;
-        }
+        active = !active;
+        keys[GLFW_KEY_SPACE] = false;
+    }
+
+    if (active)
+    {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    } else {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 }
 
 UIManager::~UIManager() = default;
 
 void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
-    // Implement update logic for UI elements based on deltaTime
-    // update should call is mouseInside in button, and maybe change a flag
-
     for (Button &btn : buttons)
     {
-        if(btn.is_mouse_inside(xpos, ypos) && keys[GLFW_MOUSE_BUTTON_LEFT])
+        if (btn.is_clicked(xpos, ypos, keys))
         {
-            btn.activate();
             game.spawn_block("rectangle", "block", true);
-        } else if(btn.is_mouse_inside(xpos, ypos) && !keys[GLFW_MOUSE_BUTTON_LEFT])
-        {
-            btn.deactivate();
         }
     }
-
 }
 
 void UIManager::Render() {
@@ -77,13 +68,6 @@ void UIManager::Render() {
     {
         btn.draw(shader, texture);
     }
-
-    // change this! button shoudn't be created every render, only draw function
-    //Button button;
-    //Shader shader = ResourceManager::GetShader("ui");
-    //Texture2D texture;
-
-    //button.draw(shader, texture, position, size, color);
 }
 
 bool UIManager::is_active()

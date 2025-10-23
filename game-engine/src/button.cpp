@@ -14,15 +14,17 @@ Button::Button(glm::vec4 colour, glm::vec2 position, glm::vec2 size) {
 
 Button::~Button() = default;
 
-void Button::print_button_dimensions()
-{
-    std::cout << "Top left x = " << position.x <<
-        " Top right x = " << position.x + size.x <<
-        " Top left y = " << position.y <<
-        " Bottom left y = " << position.y + size.y << std::endl;
+bool Button::is_clicked(float xpos, float ypos, bool keys[]) {
+    if (!is_inside(xpos, ypos) || !keys[GLFW_MOUSE_BUTTON_LEFT])
+    {
+        set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
+        return false;
+    }
+    set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.2f));
+    return true;
 }
 
-bool Button::is_mouse_inside(float xpos, float ypos) {
+bool Button::is_inside(float xpos, float ypos) {
     float leftX = position.x;
     float rightX = position.x + size.x;
     float topY = position.y;
@@ -32,9 +34,7 @@ bool Button::is_mouse_inside(float xpos, float ypos) {
         (ypos > topY && ypos < bottomY))
     {
         return true;
-    } else {
-        set_colour();
-    }
+    } 
     return false;
 }
 
@@ -42,11 +42,9 @@ void Button::draw(Shader &shader, Texture2D &texture) {
     shader.Use();
     glm::mat4 model = glm::mat4(1.0f); // creates the 4 x 4 identity matrix
     model = glm::translate(model, glm::vec3(position, 0.0f));
-
     model = glm::scale(model, glm::vec3(size, 1.0f));
 
     shader.SetMatrix4("model", model);
-    std::cout << colour.x << " " << colour.y << " " << colour.z << " " << colour.w << std::endl;
     shader.SetVector4f("spriteColor", colour);
 
     glActiveTexture(GL_TEXTURE0);
@@ -90,24 +88,7 @@ void Button::init_data() {
     glBindVertexArray(0);
 }
 
-void Button::set_colour()
+void Button::set_colour(glm::vec4 colour)
 {
-    if (activated)
-    {
-        this->colour = glm::vec4(0.5f, 0.5f, 0.5f, 0.3f);
-    } else {
-        this->colour = glm::vec4(0.5f, 0.5f, 0.5f, 1.0f);
-    }
-}
-
-void Button::activate()
-{
-    this->activated = true;
-    set_colour();
-}
-
-void Button::deactivate()
-{
-    this->activated = false;
-    set_colour();
+    this->colour = colour;
 }
