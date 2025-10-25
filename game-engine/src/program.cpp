@@ -28,7 +28,7 @@ float lastFrame = 0.0f;
 float lastX = 400, lastY = 300;
 float pitch = 0, yaw = -90.f;
 
-std::default_random_engine gen(static_cast<unsigned>(glfwGetTime()));
+std::default_random_engine gen;
 std::uniform_real_distribution<float> distribution(-2.0f, 2.0f);
 
 void frame_buffer_size_callback(GLFWwindow *window, int width, int height);
@@ -63,7 +63,7 @@ int main()
 	}
 	glfwMakeContextCurrent(window);
 	glfwSetFramebufferSizeCallback(window, frame_buffer_size_callback);
-	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetKeyCallback(window, key_callback);
 	glfwSetMouseButtonCallback(window, mouse_button_callback);
@@ -80,6 +80,8 @@ int main()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);  
 
+    gen.seed(static_cast<unsigned>(glfwGetTime()));
+
 	game.Init();
     ui_manager.Init();
     
@@ -90,15 +92,13 @@ int main()
 		lastFrame = currentFrame;
 		glfwPollEvents(); // checks if any events are triggered (keyboard or mousemovement), calls functions via callback methods
 
-
+        ui_manager.ProcessInput(window);
         if (!ui_manager.is_active())
         {
             game.ProcessInput(deltaTime);
         } 
 
         game.Update(deltaTime);
-
-        ui_manager.ProcessInput(window);
         ui_manager.Update(deltaTime, lastX, lastY, game);
 
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -167,7 +167,6 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 
 	lastX = xpos;
 	lastY = ypos;
-
 
 	if (!ui_manager.is_active()) game.ProcessMouseInput(xoffset, yoffset);
 }

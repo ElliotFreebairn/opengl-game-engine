@@ -18,7 +18,7 @@ CXX = g++
 # 	-std=c++17: Use the c++17 standard
 # 	-Iinclude: Adds the include/ directory to the list of places to look for header files
 # 	-Isrc: Also looks inside of the src/ for headers
-CXXFLAGS = -Wall -std=c++17 -Iincludes -Isrc
+CXXFLAGS = -Wall -std=c++17 -Iincludes -Isrc -g
 
 # LDFLAGS are used during linking (when combining .o files to an executable)
 # 	-lglfw: Link against GLFW
