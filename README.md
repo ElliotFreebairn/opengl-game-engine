@@ -6,13 +6,13 @@ Includes practice code and concepts inspired by [learnopengl.com](https://learno
 ## Updates
 
 # UI dragging
-![me](./game-engine/gifts/btn_drag.gif)
+![me](./game-engine/gifs/btn_drag.gif)
 
 # Buttons (UI)
-![me](./game-engine/gifts/btn_click.gif)
+![me](./game-engine/gifs/btn_click.gif)
 
 # Object creation
-![me](./game-engine/gifts/click.gif)
+![me](./game-engine/gifs/click.gif)
 
 ## Features
 
