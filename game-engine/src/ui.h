@@ -11,8 +11,6 @@ public:
     bool is_inside(float xpos, float ypos);
     bool is_clicked(float xpos, float ypos, bool keys[]);
 
-protected:
-    virtual void init_data() = 0; // same
     // setters
     void set_colour(glm::vec4 colour);
     void set_position(glm::vec2 position);
@@ -23,6 +21,8 @@ protected:
     glm::vec2 get_position();
     glm::vec2 get_size();
 
+protected:
+    virtual void init_data() = 0; // same
     unsigned int VAO;
 
     glm::vec2 position;

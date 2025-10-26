@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 #include <list>
+#include <optional>
 
 
 std::list<Button> buttons;
@@ -38,6 +39,7 @@ void UIManager::ProcessInput(GLFWwindow *window)
     if (keys[GLFW_KEY_ENTER])
     {
         draggable = !draggable;
+        keys[GLFW_KEY_ENTER] = false;
     }
 
     if (active)
@@ -52,9 +54,15 @@ UIManager::~UIManager() = default;
 
 void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
     // loop through UI elements, get the UI object which mouse is inside
+    
     for (Button &btn : buttons)
     {
-        if (btn.is_visible() && btn.is_clicked(xpos, ypos, keys) && !btn.is_draggable())
+        if (draggable && btn.is_clicked(xpos, ypos, keys))
+        {
+            glm::vec2 position = btn.get_position();
+            btn.set_position(glm::vec2(position.x, position.y -= 2));
+        }
+        else if (btn.is_visible() && btn.is_clicked(xpos, ypos, keys) && !btn.is_draggable())
         {
             game.spawn_block("rectangle", "block", true);
         }
