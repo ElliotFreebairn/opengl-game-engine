@@ -1,4 +1,4 @@
-# protoengine
+# personal game engine
 
 A work-in-progress game engine written in C++ with OpenGL, built and tested on Debian Linux.  
 Includes practice code and concepts inspired by [learnopengl.com](https://learnopengl.com/).
