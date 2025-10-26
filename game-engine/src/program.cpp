@@ -168,7 +168,13 @@ void mouse_callback(GLFWwindow *window, double xposIn, double yposIn)
 	lastX = xpos;
 	lastY = ypos;
 
-	if (!ui_manager.is_active()) game.ProcessMouseInput(xoffset, yoffset);
+	if (!ui_manager.is_active()) 
+    {
+        game.ProcessMouseInput(xoffset, yoffset);
+    } else {
+        ui_manager.ProcessMouseInput(xoffset, yoffset);
+    }
+
 }
 
 // resizes viewport when user resizes the glfw window

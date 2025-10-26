@@ -27,6 +27,8 @@ void UIManager::Init() {
     Button button(colour, position, size);
     button.set_visibility(true);
     buttons.push_front(button);
+
+    // draggable object (may change soon)
 }
 
 void UIManager::ProcessInput(GLFWwindow *window)
@@ -50,22 +52,37 @@ void UIManager::ProcessInput(GLFWwindow *window)
     }
 }
 
+void UIManager::ProcessMouseInput(float xoffset, float yoffset)
+{
+    if (dragged_obj != nullptr)
+    {
+        glm::vec2 new_pos(dragged_obj->get_position().x + xoffset, dragged_obj->get_position().y - yoffset);
+        dragged_obj->set_position(new_pos);
+    }
+}
+
 UIManager::~UIManager() = default;
 
 void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
     // loop through UI elements, get the UI object which mouse is inside
-    
     for (Button &btn : buttons)
     {
         if (draggable && btn.is_clicked(xpos, ypos, keys))
         {
-            glm::vec2 position = btn.get_position();
-            btn.set_position(glm::vec2(position.x, position.y -= 2));
+            dragged_obj = &btn;
         }
-        else if (btn.is_visible() && btn.is_clicked(xpos, ypos, keys) && !btn.is_draggable())
+        else if (btn.is_visible() && btn.is_clicked(xpos, ypos, keys))
         {
             game.spawn_block("rectangle", "block", true);
+            btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.6f));
+        } else {
+            btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
         }
+    }
+
+    if (draggable && dragged_obj && !dragged_obj->is_clicked(xpos, ypos, keys))
+    {
+        dragged_obj = nullptr;
     }
 }
 

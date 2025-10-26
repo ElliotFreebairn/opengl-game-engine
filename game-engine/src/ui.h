@@ -7,6 +7,7 @@
 class UI {
 public:
     UI(glm::vec4 colour, glm::vec2 position, glm::vec2 size);
+    UI();
 
     bool is_inside(float xpos, float ypos);
     bool is_clicked(float xpos, float ypos, bool keys[]);

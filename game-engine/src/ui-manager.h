@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 
 #include <list>
+#include <optional>
 
 #include "shader.h"
 #include "game.h"
@@ -24,6 +25,7 @@ public:
     void Render();
     void Update(float deltaTime, float xpos, float ypos, Game &game);
     void ProcessInput(GLFWwindow* window);
+    void ProcessMouseInput(float xoffset, float yoffset);
     void Init();
     
     bool is_active();
@@ -35,5 +37,7 @@ private:
     int screenHeight;
     bool active = false;
     bool draggable = false;
+    
+    UI* dragged_obj;
 };
 #endif

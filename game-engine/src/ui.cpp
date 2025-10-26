@@ -11,11 +11,8 @@ UI::UI(glm::vec4 colour, glm::vec2 position, glm::vec2 size)
 bool UI::is_clicked(float xpos, float ypos, bool keys[]) {
     if (!is_inside(xpos, ypos) || !keys[GLFW_MOUSE_BUTTON_LEFT])
     {
-        set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
         return false;
     }
-
-    set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.2f));
     return true;
 }
 
