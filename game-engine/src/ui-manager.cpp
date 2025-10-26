@@ -67,14 +67,17 @@ void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
     // loop through UI elements, get the UI object which mouse is inside
     for (Button &btn : buttons)
     {
-        if (draggable && btn.is_clicked(xpos, ypos, keys))
+        if (!btn.is_visible()) continue;
+
+        if (btn.is_clicked(xpos, ypos, keys))
         {
-            dragged_obj = &btn;
-        }
-        else if (btn.is_visible() && btn.is_clicked(xpos, ypos, keys))
-        {
-            game.spawn_block("rectangle", "block", true);
-            btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.6f));
+            if (draggable)
+            {
+                dragged_obj = &btn;
+            } else {
+                game.spawn_block("rectangle", "block", true);
+                btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.6f));
+            }
         } else {
             btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
         }
