@@ -5,38 +5,11 @@
 #include <GLFW/glfw3.h>
 
 
-Button::Button(glm::vec4 colour, glm::vec2 position, glm::vec2 size) {
-    this->colour = colour;
-    this->position = position;
-    this->size = size;
+Button::Button(glm::vec4 colour, glm::vec2 position, glm::vec2 size) : UI(colour, position, size){
     init_data();
 }
 
 Button::~Button() = default;
-
-bool Button::is_clicked(float xpos, float ypos, bool keys[]) {
-    if (!is_inside(xpos, ypos) || !keys[GLFW_MOUSE_BUTTON_LEFT])
-    {
-        set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
-        return false;
-    }
-    set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.2f));
-    return true;
-}
-
-bool Button::is_inside(float xpos, float ypos) {
-    float leftX = position.x;
-    float rightX = position.x + size.x;
-    float topY = position.y;
-    float bottomY = position.y + size.y;
-
-    if ((xpos  > leftX && xpos < rightX) &&
-        (ypos > topY && ypos < bottomY))
-    {
-        return true;
-    } 
-    return false;
-}
 
 void Button::draw(Shader &shader, Texture2D &texture) {
     shader.Use();
@@ -88,11 +61,6 @@ void Button::init_data() {
     glBindVertexArray(0);
 }
 
-void Button::set_colour(glm::vec4 colour)
-{
-    this->colour = colour;
-}
-
 bool Button::is_visible()
 {
     return visible;
@@ -101,4 +69,9 @@ bool Button::is_visible()
 void Button::set_visibility(bool visible)
 {
     this->visible = visible;
+}
+
+bool Button::is_draggable()
+{
+    return draggable;
 }

@@ -35,6 +35,10 @@ void UIManager::ProcessInput(GLFWwindow *window)
         active = !active;
         keys[GLFW_KEY_SPACE] = false;
     }
+    if (keys[GLFW_KEY_ENTER])
+    {
+        draggable = !draggable;
+    }
 
     if (active)
     {
@@ -47,9 +51,10 @@ void UIManager::ProcessInput(GLFWwindow *window)
 UIManager::~UIManager() = default;
 
 void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
+    // loop through UI elements, get the UI object which mouse is inside
     for (Button &btn : buttons)
     {
-        if (btn.is_visible() && btn.is_clicked(xpos, ypos, keys))
+        if (btn.is_visible() && btn.is_clicked(xpos, ypos, keys) && !btn.is_draggable())
         {
             game.spawn_block("rectangle", "block", true);
         }

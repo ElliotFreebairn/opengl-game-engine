@@ -6,8 +6,10 @@
 #include <glm/glm.hpp>
 
 #include <list>
+
 #include "shader.h"
 #include "game.h"
+#include "ui.h"
 /*
     UIManager should handle all aspects of the user interface, including rendering UI elements,
     managing user input for UI interactions, and updating UI states.
@@ -32,5 +34,6 @@ private:
     int screenWidth;
     int screenHeight;
     bool active = false;
+    bool draggable = false;
 };
 #endif
