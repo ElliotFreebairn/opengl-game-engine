@@ -8,8 +8,8 @@ UI::UI(glm::vec4 colour, glm::vec2 position, glm::vec2 size)
     this->size = size;
 }
 
-bool UI::is_clicked(float xpos, float ypos, bool keys[]) {
-    if (!is_inside(xpos, ypos) || !keys[GLFW_MOUSE_BUTTON_LEFT])
+bool UI::is_clicked(float xpos, float ypos, bool keys[], int glfw_code) {
+    if (!is_inside(xpos, ypos) || !keys[glfw_code])
     {
         return false;
     }

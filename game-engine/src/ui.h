@@ -10,7 +10,7 @@ public:
     UI();
 
     bool is_inside(float xpos, float ypos);
-    bool is_clicked(float xpos, float ypos, bool keys[]);
+    bool is_clicked(float xpos, float ypos, bool keys[], int glfw_code);
 
     // setters
     void set_colour(glm::vec4 colour);

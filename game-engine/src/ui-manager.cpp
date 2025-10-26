@@ -36,11 +36,6 @@ void UIManager::ProcessInput(GLFWwindow *window)
         active = !active;
         keys[GLFW_KEY_SPACE] = false;
     }
-    if (keys[GLFW_KEY_ENTER])
-    {
-        draggable = !draggable;
-        keys[GLFW_KEY_ENTER] = false;
-    }
 
     if (active)
     {
@@ -67,21 +62,19 @@ void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
     {
         if (!btn.is_visible()) continue;
 
-        if (btn.is_clicked(xpos, ypos, keys))
+        if (btn.is_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_RIGHT))
         {
-            if (draggable)
-            {
-                dragged_obj = &btn;
-            } else {
-                game.spawn_block("rectangle", "block", true);
-                btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.6f));
-            }
+            dragged_obj = &btn;
+        } else if (btn.is_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_LEFT))
+        {
+             game.spawn_block("rectangle", "block", true);
+             btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.6f));
         } else {
             btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
         }
     }
 
-    if (draggable && dragged_obj && !dragged_obj->is_clicked(xpos, ypos, keys))
+    if (dragged_obj && !dragged_obj->is_clicked(xpos, ypos, keys, GLFW_MOUSE_BUTTON_RIGHT))
     {
         dragged_obj = nullptr;
     }
