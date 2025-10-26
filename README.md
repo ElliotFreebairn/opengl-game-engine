@@ -3,6 +3,17 @@
 A work-in-progress game engine written in C++ with OpenGL, built and tested on Debian Linux.  
 Includes practice code and concepts inspired by [learnopengl.com](https://learnopengl.com/).
 
+## Updates
+
+# UI dragging
+![me](./game-engine/gifts/btn_drag.gif)
+
+# Buttons (UI)
+![me](./game-engine/gifts/btn_click.gif)
+
+# Object creation
+![me](./game-engine/gifts/click.gif)
+
 ## Features
 
 - Written in C++ (with some C), with the main focus on learning c++ and opengl well.

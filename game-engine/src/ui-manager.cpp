@@ -27,8 +27,6 @@ void UIManager::Init() {
     Button button(colour, position, size);
     button.set_visibility(true);
     buttons.push_front(button);
-
-    // draggable object (may change soon)
 }
 
 void UIManager::ProcessInput(GLFWwindow *window)
