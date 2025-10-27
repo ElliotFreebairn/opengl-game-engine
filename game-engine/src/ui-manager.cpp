@@ -36,6 +36,11 @@ void UIManager::ProcessInput(GLFWwindow *window)
         active = !active;
         keys[GLFW_KEY_SPACE] = false;
     }
+    if (keys[GLFW_KEY_ENTER])
+    {
+        resize = !resize;
+        keys[GLFW_KEY_ENTER] = false;
+    }
 
     if (active)
     {
@@ -61,7 +66,13 @@ void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
     for (Button &btn : buttons)
     {
         if (!btn.is_visible()) continue;
-
+        
+        if (btn.is_corner_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_LEFT) && resize)
+        {
+            glm::vec2 size = btn.get_size();
+            btn.set_size(glm::vec2(size.x + 1, size.y + 1));
+            continue;
+        }
         if (btn.is_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_RIGHT))
         {
             dragged_obj = &btn;

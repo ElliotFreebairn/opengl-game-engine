@@ -10,6 +10,8 @@ public:
     UI();
 
     bool is_inside(float xpos, float ypos);
+    bool is_corner_clicked(float xpos, float ypos, bool keys[], int glfw_code, const float diameter = 50);
+    bool is_in_corner(float xpos, float ypos, const float diameter = 50);
     bool is_clicked(float xpos, float ypos, bool keys[], int glfw_code);
 
     // setters

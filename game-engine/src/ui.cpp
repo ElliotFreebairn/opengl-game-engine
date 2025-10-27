@@ -30,6 +30,35 @@ bool UI::is_inside(float xpos, float ypos) {
     return false;
 }
 
+bool UI::is_corner_clicked(float xpos, float ypos, bool keys[], int glfw_code, const float diameter)
+{
+    if (!is_in_corner(xpos, ypos) || !keys[glfw_code])
+        return false;
+
+    return true;
+}
+
+bool UI::is_in_corner(float xpos, float ypos, const float diameter)
+{
+    float leftX = position.x;
+    float rightX = position.x + size.x;
+    float topY = position.y;
+    float bottomY = position.y + size.y;
+    
+    // top left corner
+    if ((xpos > leftX && xpos < leftX + diameter)
+        && (ypos > topY && ypos < topY + diameter))
+    {
+        return true;
+    }
+    return false; 
+    // top right corner
+
+    // bottom left corner
+
+    // bottom right corner
+}
+
 // setters
 void UI::set_colour(glm::vec4 colour)
 {

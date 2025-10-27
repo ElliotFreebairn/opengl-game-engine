@@ -36,7 +36,7 @@ private:
     int screenWidth;
     int screenHeight;
     bool active = false;
-    bool draggable = false;
+    bool resize = false;
     
     UI* dragged_obj;
 };
