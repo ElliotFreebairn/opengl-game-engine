@@ -27,6 +27,7 @@ bool UI::is_inside(float xpos, float ypos) {
     {
         return true;
     } 
+
     return false;
 }
 
@@ -51,12 +52,26 @@ bool UI::is_in_corner(float xpos, float ypos, const float diameter)
     {
         return true;
     }
-    return false; 
+
     // top right corner
-
+    if((xpos < rightX && xpos > rightX - diameter)
+       && (ypos > topY && ypos < topY + diameter))
+    {
+        return true;
+    }
     // bottom left corner
-
+    if ((xpos > leftX && xpos < leftX + diameter)
+        && (ypos < bottomY && ypos > bottomY - diameter))
+    {
+        return true;
+    }
     // bottom right corner
+    if ((xpos < rightX && xpos > rightX - diameter)
+        && (ypos < bottomY && ypos > bottomY - diameter))
+    {
+        return true;
+    }
+    return false;
 }
 
 // setters
