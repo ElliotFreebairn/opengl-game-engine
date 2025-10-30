@@ -45,7 +45,9 @@ bool UI::is_in_corner(float xpos, float ypos, const float diameter)
     float rightX = position.x + size.x;
     float topY = position.y;
     float bottomY = position.y + size.y;
+    /*
     
+    */
     // top left corner
     if ((xpos > leftX && xpos < leftX + diameter)
         && (ypos > topY && ypos < topY + diameter))

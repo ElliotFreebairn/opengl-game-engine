@@ -39,5 +39,6 @@ private:
     bool resize = false;
     
     UI* dragged_obj;
+    UI* resized_obj;
 };
 #endif

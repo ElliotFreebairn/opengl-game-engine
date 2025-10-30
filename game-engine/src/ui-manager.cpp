@@ -57,6 +57,13 @@ void UIManager::ProcessMouseInput(float xoffset, float yoffset)
         glm::vec2 new_pos(dragged_obj->get_position().x + xoffset, dragged_obj->get_position().y - yoffset);
         dragged_obj->set_position(new_pos);
     }
+    if (resized_obj != nullptr)
+    {
+        glm::vec2 old_position = resized_obj->get_position();
+        
+        // figure out which corner based on x and y offset
+        // increase size and move position based on the direction
+    }
 }
 
 UIManager::~UIManager() = default;
@@ -69,8 +76,7 @@ void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
         
         if (btn.is_corner_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_LEFT) && resize)
         {
-            glm::vec2 size = btn.get_size();
-            btn.set_size(glm::vec2(size.x + 1, size.y + 1));
+            resized_obj = &btn;
             continue;
         }
         if (btn.is_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_RIGHT))
@@ -88,6 +94,10 @@ void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
     if (dragged_obj && !dragged_obj->is_clicked(xpos, ypos, keys, GLFW_MOUSE_BUTTON_RIGHT))
     {
         dragged_obj = nullptr;
+    }
+    if (resized_obj && !resized_obj->is_corner_clicked(xpos, ypos, keys, GLFW_MOUSE_BUTTON_RIGHT))
+    {
+        resized_obj = nullptr;
     }
 }
 
