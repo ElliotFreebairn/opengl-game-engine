@@ -1,6 +1,8 @@
 #include "ui.h"
 #include <GLFW/glfw3.h>
 
+#include <iostream>
+
 UI::UI(glm::vec4 colour, glm::vec2 position, glm::vec2 size)
 {
     this->colour = colour;
@@ -41,39 +43,63 @@ bool UI::is_corner_clicked(float xpos, float ypos, bool keys[], int glfw_code, c
 
 bool UI::is_in_corner(float xpos, float ypos, const float diameter)
 {
-    float leftX = position.x;
-    float rightX = position.x + size.x;
-    float topY = position.y;
-    float bottomY = position.y + size.y;
-    /*
+    Corner corner = which_corner(xpos, ypos, diameter);
+    if (corner == Corner::NONE)
+        return false;
+    return true;
+}
+
+Corner UI::which_corner(float xpos, float ypos, const float diameter)
+{
+    float leftX = position.x, rightX = position.x + size.x;
+    float topY = position.y, bottomY = position.y + size.y;
     
-    */
-    // top left corner
     if ((xpos > leftX && xpos < leftX + diameter)
         && (ypos > topY && ypos < topY + diameter))
     {
-        return true;
+        return Corner::TOP_LEFT; 
     }
-
     // top right corner
     if((xpos < rightX && xpos > rightX - diameter)
        && (ypos > topY && ypos < topY + diameter))
     {
-        return true;
+        return Corner::TOP_RIGHT;
     }
     // bottom left corner
     if ((xpos > leftX && xpos < leftX + diameter)
         && (ypos < bottomY && ypos > bottomY - diameter))
     {
-        return true;
+        return Corner::BOTTOM_LEFT;
     }
     // bottom right corner
     if ((xpos < rightX && xpos > rightX - diameter)
         && (ypos < bottomY && ypos > bottomY - diameter))
     {
-        return true;
+        return Corner::BOTTOM_RIGHT;
     }
-    return false;
+    return Corner::NONE;
+}
+
+void UI::resize_corner(float xoffset, float yoffset, Corner corner)
+{
+    switch(corner)
+    {
+        case TOP_LEFT:
+            std::cout << "TOP LEFT" << std::endl;
+            break;
+
+        case TOP_RIGHT:
+            std::cout << "TOP RIGHT" << std::endl;
+            break;
+
+        case BOTTOM_LEFT:
+            std::cout << "BOTTOM LEFT" << std::endl;
+            break;
+
+        case BOTTOM_RIGHT:
+            std::cout << "BOTTOM RIGHT"  << std::endl;
+            break;
+    }
 }
 
 // setters

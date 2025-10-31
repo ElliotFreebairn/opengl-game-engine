@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 
 #include <list>
+#include <tuple>
 #include <optional>
 
 #include "shader.h"
@@ -40,5 +41,7 @@ private:
     
     UI* dragged_obj;
     UI* resized_obj;
+
+    std::tuple<UI*, Corner> resize_corner;
 };
 #endif
