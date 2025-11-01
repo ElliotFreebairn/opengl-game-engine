@@ -21,7 +21,7 @@ public:
     void resize_corner(float xoffset, float yoffset, Corner corner);
 
     bool is_inside(float xpos, float ypos);
-    bool is_corner_clicked(float xpos, float ypos, bool keys[], int glfw_code, const float diameter = 50);
+    bool is_corner_clicked(float xpos, float ypos, bool keys[], int glfw_code, const float diameter = 10);
     bool is_in_corner(float xpos, float ypos, const float diameter = 50);
     bool is_clicked(float xpos, float ypos, bool keys[], int glfw_code);
     Corner which_corner(float xpos, float ypos, const float diameter = 50);
