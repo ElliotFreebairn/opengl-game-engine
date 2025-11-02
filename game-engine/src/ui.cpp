@@ -95,6 +95,11 @@ void UI::resize_corner(float xoffset, float yoffset, Corner corner)
                 set_position(glm::vec2(current_position.x - OFFSET, current_position.y - OFFSET));
                 set_size(glm::vec2(current_size.x + OFFSET, current_size.y + OFFSET));
             }
+
+            if (xoffset > 0 && yoffset < 0) {
+                set_position(glm::vec2(current_position.x + OFFSET, current_position.y + OFFSET));
+                set_size(glm::vec2(current_size.x - OFFSET, current_size.y - OFFSET));
+            }
             //std::cout << "TOP LEFT" << std::endl;
             break;
 
@@ -103,12 +108,22 @@ void UI::resize_corner(float xoffset, float yoffset, Corner corner)
                 set_position(glm::vec2(current_position.x, current_position.y - OFFSET));
                 set_size(glm::vec2(current_size.x + OFFSET, current_size.y + OFFSET));
             }
+
+            if (xoffset < 0 && yoffset < 0) {
+                set_position(glm::vec2(current_position.x, current_position.y + OFFSET));
+                set_size(glm::vec2(current_size.x - OFFSET, current_size.y - OFFSET));
+            }
             break;
             //std::cout << "TOP RIGHT" << std::endl;
         case BOTTOM_LEFT:
             if (xoffset < 0 && yoffset < 0) {
                 set_position(glm::vec2(current_position.x - OFFSET, current_position.y));
                 set_size(glm::vec2(current_size.x + OFFSET, current_size.y + OFFSET));
+            }
+
+            if (xoffset > 0 && yoffset > 0) {
+                set_position(glm::vec2(current_position.x + OFFSET, current_position.y));
+                set_size(glm::vec2(current_size.x - OFFSET, current_size.y - OFFSET));
             }
             //std::cout << "BOTTOM LEFT" << std::endl;
             break;
@@ -117,6 +132,11 @@ void UI::resize_corner(float xoffset, float yoffset, Corner corner)
             if (xoffset > 0 && yoffset < 0) {
                 set_position(glm::vec2(current_position.x, current_position.y));
                 set_size(glm::vec2(current_size.x + OFFSET, current_size.y + OFFSET));
+            }
+
+            if (xoffset < 0 && yoffset > 0) {
+                set_position(glm::vec2(current_position.x, current_position.y));
+                set_size(glm::vec2(current_size.x - OFFSET, current_size.y - OFFSET));
             }
             //std::cout << "BOTTOM RIGHT"  << std::endl;
             break;
