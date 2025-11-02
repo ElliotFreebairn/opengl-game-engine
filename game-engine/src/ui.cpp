@@ -93,7 +93,7 @@ void UI::resize_corner(float xoffset, float yoffset, Corner corner)
                 set_position(glm::vec2(current_position.x - 2, current_position.y - 2));
                 set_size(glm::vec2(current_size.x + 2, current_size.y + 2));
             }
-            std::cout << "TOP LEFT" << std::endl;
+            //std::cout << "TOP LEFT" << std::endl;
             break;
 
         case TOP_RIGHT:
@@ -101,15 +101,23 @@ void UI::resize_corner(float xoffset, float yoffset, Corner corner)
                 set_position(glm::vec2(current_position.x, current_position.y - 2));
                 set_size(glm::vec2(current_size.x + 2, current_size.y + 2));
             }
-            std::cout << "TOP RIGHT" << std::endl;
+            //std::cout << "TOP RIGHT" << std::endl;
             break;
 
         case BOTTOM_LEFT:
-            std::cout << "BOTTOM LEFT" << std::endl;
+            if (xoffset < 0 && yoffset < 0) {
+                set_position(glm::vec2(current_position.x - 2, current_position.y));
+                set_size(glm::vec2(current_size.x + 2, current_size.y + 2));
+            }
+            //std::cout << "BOTTOM LEFT" << std::endl;
             break;
 
         case BOTTOM_RIGHT:
-            std::cout << "BOTTOM RIGHT"  << std::endl;
+            if (xoffset > 0 && yoffset < 0) {
+                set_position(glm::vec2(current_position.x, current_position.y));
+                set_size(glm::vec2(current_size.x + 2, current_size.y + 2));
+            }
+            //std::cout << "BOTTOM RIGHT"  << std::endl;
             break;
     }
 }

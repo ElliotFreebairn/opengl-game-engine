@@ -48,6 +48,13 @@ void UIManager::ProcessInput(GLFWwindow *window)
     } else {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
+
+    if (resize)
+    {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_HRESIZE_CURSOR);
+    } else {
+        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+    }
 }
 
 void UIManager::ProcessMouseInput(float xoffset, float yoffset)
