@@ -52,43 +52,60 @@ bool UI::is_in_corner(float xpos, float ypos)
 
 Corner UI::which_corner(float xpos, float ypos)
 {
-    float leftX = position.x, rightX = position.x + size.x;
-    float topY = position.y, bottomY = position.y + size.y;
+    // could have corners be a struct or enum with method?
+    const float DIV = 4;
+
+    float leftX = position.x;
+    float rightX = position.x + size.x;
+    float middleX = position.x + (size.x / 2);
+
+    float topY = position.y;
+    float bottomY = position.y + size.y;
+    float middleY = position.y + (size.y / 2);
+
+    float xoffset = size.x / DIV;
+    float yoffset = size.y / DIV;
     
-    if ((xpos > leftX && xpos < leftX + RADIUS)
-        && (ypos > topY && ypos < topY + RADIUS))
+    //std::cout << "xoffset " << xoffset << " yoffset " << yoffset << std::endl;
+    //std::cout << "middlex " << middleX << " middleY " << middleY << std::endl;
+
+    // top left corner
+    if ((xpos > leftX && xpos < leftX + xoffset) &&
+        (ypos > topY && ypos < topY + yoffset))
     {
-        return Corner::TOP_LEFT; 
+        return Corner::TOP_LEFT;
     }
+
     // top right corner
-    if((xpos < rightX && xpos > rightX - RADIUS)
-       && (ypos > topY && ypos < topY + RADIUS))
+    if ((xpos > middleX + xoffset && xpos < rightX) &&
+        (ypos > topY && ypos < topY + yoffset))
     {
         return Corner::TOP_RIGHT;
     }
+
     // bottom left corner
-    if ((xpos > leftX && xpos < leftX + RADIUS)
-        && (ypos < bottomY && ypos > bottomY - RADIUS))
+    if ((xpos > leftX && xpos < leftX + xoffset) &&
+        (ypos > middleY + yoffset && ypos < bottomY))
     {
         return Corner::BOTTOM_LEFT;
     }
+
     // bottom right corner
-    if ((xpos < rightX && xpos > rightX - RADIUS)
-        && (ypos < bottomY && ypos > bottomY - RADIUS))
+    if ((xpos > middleX + xoffset && xpos < rightX) &&
+        (ypos > middleY + yoffset && ypos < bottomY))
     {
         return Corner::BOTTOM_RIGHT;
-    } 
+    }
     return Corner::NONE; 
 }
 
 
 void UI::resize_corner(float xoffset, float yoffset, Corner corner)
 {
-    std::cout << "xoffset " << xoffset << " yoffset " << yoffset << std::endl;
     glm::vec2 current_position = get_position();
     glm::vec2 current_size = get_size();
 
-    const float OFFSET = 2;
+    const float OFFSET = 3;
     switch(corner)
     {
         case TOP_LEFT:
