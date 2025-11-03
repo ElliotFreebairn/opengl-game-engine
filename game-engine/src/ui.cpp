@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+const float RADIUS = 50;
 UI::UI(glm::vec4 colour, glm::vec2 position, glm::vec2 size)
 {
     this->colour = colour;
@@ -33,7 +34,7 @@ bool UI::is_inside(float xpos, float ypos) {
     return false;
 }
 
-bool UI::is_corner_clicked(float xpos, float ypos, bool keys[], int glfw_code, const float diameter)
+bool UI::is_corner_clicked(float xpos, float ypos, bool keys[], int glfw_code) 
 {
     if (!is_in_corner(xpos, ypos) || !keys[glfw_code])
         return false;
@@ -41,39 +42,39 @@ bool UI::is_corner_clicked(float xpos, float ypos, bool keys[], int glfw_code, c
     return true;
 }
 
-bool UI::is_in_corner(float xpos, float ypos, const float diameter)
+bool UI::is_in_corner(float xpos, float ypos)
 {
-    Corner corner = which_corner(xpos, ypos, diameter);
+    Corner corner = which_corner(xpos, ypos);
     if (corner == Corner::NONE)
         return false;
     return true;
 }
 
-Corner UI::which_corner(float xpos, float ypos, const float diameter)
+Corner UI::which_corner(float xpos, float ypos)
 {
     float leftX = position.x, rightX = position.x + size.x;
     float topY = position.y, bottomY = position.y + size.y;
     
-    if ((xpos > leftX && xpos < leftX + diameter)
-        && (ypos > topY && ypos < topY + diameter))
+    if ((xpos > leftX && xpos < leftX + RADIUS)
+        && (ypos > topY && ypos < topY + RADIUS))
     {
         return Corner::TOP_LEFT; 
     }
     // top right corner
-    if((xpos < rightX && xpos > rightX - diameter)
-       && (ypos > topY && ypos < topY + diameter))
+    if((xpos < rightX && xpos > rightX - RADIUS)
+       && (ypos > topY && ypos < topY + RADIUS))
     {
         return Corner::TOP_RIGHT;
     }
     // bottom left corner
-    if ((xpos > leftX && xpos < leftX + diameter)
-        && (ypos < bottomY && ypos > bottomY - diameter))
+    if ((xpos > leftX && xpos < leftX + RADIUS)
+        && (ypos < bottomY && ypos > bottomY - RADIUS))
     {
         return Corner::BOTTOM_LEFT;
     }
     // bottom right corner
-    if ((xpos < rightX && xpos > rightX - diameter)
-        && (ypos < bottomY && ypos > bottomY - diameter))
+    if ((xpos < rightX && xpos > rightX - RADIUS)
+        && (ypos < bottomY && ypos > bottomY - RADIUS))
     {
         return Corner::BOTTOM_RIGHT;
     } 

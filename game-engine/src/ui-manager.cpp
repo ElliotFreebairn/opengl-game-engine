@@ -88,6 +88,9 @@ void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
             resize_corner = std::tuple(resized_obj, btn.which_corner(xpos, ypos));
             continue;
         }
+        
+
+        if (resize) continue;
         if (btn.is_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_RIGHT))
         {
             dragged_obj = &btn;
