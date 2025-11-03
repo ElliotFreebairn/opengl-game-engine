@@ -31,6 +31,7 @@ void UIManager::Init() {
 
 void UIManager::ProcessInput(GLFWwindow *window)
 {
+    bool change_cursor_type = false;
     if (keys[GLFW_KEY_SPACE])
     {
         active = !active;
@@ -39,6 +40,7 @@ void UIManager::ProcessInput(GLFWwindow *window)
     if (keys[GLFW_KEY_ENTER])
     {
         resize = !resize;
+        change_cursor_type = true;
         keys[GLFW_KEY_ENTER] = false;
     }
 
@@ -49,11 +51,17 @@ void UIManager::ProcessInput(GLFWwindow *window)
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
-    if (resize)
+
+    if (change_cursor_type)
     {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_HRESIZE_CURSOR);
-    } else {
-        glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        GLFWcursor* cursor = NULL;
+        if (resize) {
+            cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
+        } else {
+            cursor = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+        }
+        glfwSetCursor(window, cursor);
+
     }
 }
 
