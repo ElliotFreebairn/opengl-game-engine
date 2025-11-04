@@ -24,7 +24,7 @@ public:
     ~UIManager();
 
     void Render();
-    void Update(float deltaTime, float xpos, float ypos, Game &game);
+    void Update(GLFWwindow* window, float deltaTime, float xpos, float ypos, Game &game);
     void ProcessInput(GLFWwindow* window);
     void ProcessMouseInput(float xoffset, float yoffset);
     void Init();
@@ -33,15 +33,20 @@ public:
 
     bool keys[1024];
 private:
+    void update_cursor(GLFWwindow* window);
+    void set_cursor(GLFWwindow* window, int cursor);
+
     Shader shader;
     int screenWidth;
     int screenHeight;
     bool active = false;
     bool resize = false;
+    bool dragging = false;
     
     UI* dragged_obj;
     UI* resized_obj;
 
     std::tuple<UI*, Corner> resize_corner;
+    
 };
 #endif

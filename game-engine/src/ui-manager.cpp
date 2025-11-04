@@ -51,17 +51,20 @@ void UIManager::ProcessInput(GLFWwindow *window)
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     }
 
-
     if (change_cursor_type)
     {
-        GLFWcursor* cursor = NULL;
-        if (resize) {
-            cursor = glfwCreateStandardCursor(GLFW_HAND_CURSOR);
-        } else {
-            cursor = glfwCreateStandardCursor(GLFW_ARROW_CURSOR);
+        if (resize)
+        {
+            set_cursor(window, GLFW_HRESIZE_CURSOR);
         }
-        glfwSetCursor(window, cursor);
-
+        else if (dragging)
+        {
+            set_cursor(window, GLFW_HAND_CURSOR);
+        }
+        else
+        {
+            set_cursor(window, GLFW_ARROW_CURSOR);
+        }
     }
 }
 
@@ -84,7 +87,7 @@ void UIManager::ProcessMouseInput(float xoffset, float yoffset)
 
 UIManager::~UIManager() = default;
 
-void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
+void UIManager::Update(GLFWwindow* window, float deltaTime, float xpos, float ypos, Game &game) {
     // loop through UI elements, get the UI object which mouse is inside
     for (Button &btn : buttons)
     {
@@ -96,16 +99,16 @@ void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
             resize_corner = std::tuple(resized_obj, btn.which_corner(xpos, ypos));
             continue;
         }
-        
-
         if (resize) continue;
+
         if (btn.is_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_RIGHT))
         {
             dragged_obj = &btn;
+            this->dragging=true;
         } else if (btn.is_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_LEFT))
         {
-             game.spawn_block("rectangle", "block", true);
-             btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.6f));
+            game.spawn_block("rectangle", "block", true);
+            btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.6f));
         } else {
             btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));
         }
@@ -114,11 +117,15 @@ void UIManager::Update(float deltaTime, float xpos, float ypos, Game &game) {
     if (dragged_obj && !dragged_obj->is_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_RIGHT))
     {
         dragged_obj = nullptr;
+        this->dragging=false;
     }
     if (resized_obj && !resized_obj->is_corner_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_LEFT))
     {
         resized_obj = nullptr;
     }
+    
+    // defintely not the best way, but good for now
+    update_cursor(window);
 }
 
 void UIManager::Render() {
@@ -139,5 +146,26 @@ void UIManager::Render() {
 bool UIManager::is_active()
 {
     return active;
+}
+
+void UIManager::update_cursor(GLFWwindow* window)
+{
+    if (resize)
+    {
+        set_cursor(window, GLFW_HRESIZE_CURSOR);
+    }
+    else if (dragging)
+    {
+        set_cursor(window, GLFW_HAND_CURSOR);
+    }
+    else
+    {
+        set_cursor(window, GLFW_ARROW_CURSOR);
+    }
+}
+
+void UIManager::set_cursor(GLFWwindow* window, int cursor_shape) {
+    GLFWcursor* cursor = glfwCreateStandardCursor(cursor_shape);
+    glfwSetCursor(window, cursor);
 }
 
