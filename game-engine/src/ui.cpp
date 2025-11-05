@@ -44,13 +44,13 @@ bool UI::is_corner_clicked(float xpos, float ypos, bool keys[], int glfw_code)
 
 bool UI::is_in_corner(float xpos, float ypos)
 {
-    Corner corner = which_corner(xpos, ypos);
-    if (corner == Corner::NONE)
+    Point corner = which_point(xpos, ypos);
+    if (corner == Point::NONE)
         return false;
     return true;
 }
 
-Corner UI::which_corner(float xpos, float ypos)
+Point UI::which_point(float xpos, float ypos)
 {
     // could have corners be a struct or enum with method?
     const float DIV = 4;
@@ -69,43 +69,59 @@ Corner UI::which_corner(float xpos, float ypos)
     //std::cout << "xoffset " << xoffset << " yoffset " << yoffset << std::endl;
     //std::cout << "middlex " << middleX << " middleY " << middleY << std::endl;
 
+    // CORNERS
     // top left corner
     if ((xpos > leftX && xpos < leftX + xoffset) &&
         (ypos > topY && ypos < topY + yoffset))
     {
-        return Corner::TOP_LEFT;
+        return Point::TOP_LEFT;
     }
 
     // top right corner
     if ((xpos > middleX + xoffset && xpos < rightX) &&
         (ypos > topY && ypos < topY + yoffset))
     {
-        return Corner::TOP_RIGHT;
+        return Point::TOP_RIGHT;
     }
 
     // bottom left corner
     if ((xpos > leftX && xpos < leftX + xoffset) &&
         (ypos > middleY + yoffset && ypos < bottomY))
     {
-        return Corner::BOTTOM_LEFT;
+        return Point::BOTTOM_LEFT;
     }
 
     // bottom right corner
     if ((xpos > middleX + xoffset && xpos < rightX) &&
         (ypos > middleY + yoffset && ypos < bottomY))
     {
-        return Corner::BOTTOM_RIGHT;
+        return Point::BOTTOM_RIGHT;
     }
-    return Corner::NONE; 
+
+    // VERTICAL/HORIZONTAL
+    // top middle
+    if ((xpos > leftX + xoffset && xpos < rightX - xoffset) &&
+        (ypos > topY && ypos < topY + yoffset))
+    {
+        return Point::TOP_MIDDLE;
+    }
+
+    // middle bottom
+    if ((xpos > leftX + xoffset && xpos < rightX - xoffset) &&
+        (ypos > middleY + yoffset && ypos < bottomY))
+    {
+        return Point::BOTTOM_MIDDLE;
+    }
+    return Point::NONE; 
 }
 
 
-void UI::resize_corner(float xoffset, float yoffset, Corner corner)
+void UI::resize_point(float xoffset, float yoffset, Point corner)
 {
     glm::vec2 current_position = get_position();
     glm::vec2 current_size = get_size();
 
-    const float OFFSET = 3;
+    const float OFFSET = 2;
     switch(corner)
     {
         case TOP_LEFT:
@@ -145,7 +161,6 @@ void UI::resize_corner(float xoffset, float yoffset, Corner corner)
             }
             //std::cout << "BOTTOM LEFT" << std::endl;
             break;
-
         case BOTTOM_RIGHT:
             if (xoffset > 0 && yoffset < 0) {
                 set_position(glm::vec2(current_position.x, current_position.y));
@@ -157,6 +172,27 @@ void UI::resize_corner(float xoffset, float yoffset, Corner corner)
                 set_size(glm::vec2(current_size.x - OFFSET, current_size.y - OFFSET));
             }
             //std::cout << "BOTTOM RIGHT"  << std::endl;
+        case TOP_MIDDLE:
+            if (yoffset > 0) {
+                set_position(glm::vec2(current_position.x, current_position.y - OFFSET));
+                set_size(glm::vec2(current_size.x, current_size.y + OFFSET));
+            }
+
+            if (yoffset < 0) {
+                set_position(glm::vec2(current_position.x, current_position.y + OFFSET));
+                set_size(glm::vec2(current_size.x, current_size.y - OFFSET));
+            }
+            break;
+        case BOTTOM_MIDDLE:
+            if (yoffset < 0) {
+                set_position(glm::vec2(current_position.x, current_position.y));
+                set_size(glm::vec2(current_size.x, current_size.y + OFFSET));
+            }
+
+            if (yoffset > 0) {
+                set_position(glm::vec2(current_position.x, current_position.y));
+                set_size(glm::vec2(current_size.x, current_size.y - OFFSET));
+            }
             break;
         case NONE:
             break;

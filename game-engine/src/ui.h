@@ -4,11 +4,15 @@
 #include <glm/glm.hpp>
 // could be an interface class
 
-enum Corner
+enum Point
 {
     TOP_LEFT,
+    TOP_MIDDLE,
     TOP_RIGHT,
+    MIDDLE_LEFT,
+    MIDDLE_RIGHT,
     BOTTOM_LEFT,
+    BOTTOM_MIDDLE,
     BOTTOM_RIGHT,
     NONE,
 };
@@ -18,13 +22,13 @@ public:
     UI(glm::vec4 colour, glm::vec2 position, glm::vec2 size);
     UI();
 
-    void resize_corner(float xoffset, float yoffset, Corner corner);
+    void resize_point(float xoffset, float yoffset, Point corner);
 
     bool is_inside(float xpos, float ypos);
     bool is_corner_clicked(float xpos, float ypos, bool keys[], int glfw_code);
     bool is_in_corner(float xpos, float ypos);
     bool is_clicked(float xpos, float ypos, bool keys[], int glfw_code);
-    Corner which_corner(float xpos, float ypos);
+    Point which_point(float xpos, float ypos);
     
     // setters
     void set_colour(glm::vec4 colour);

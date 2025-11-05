@@ -46,7 +46,7 @@ private:
     UI* dragged_obj;
     UI* resized_obj;
 
-    std::tuple<UI*, Corner> resize_corner;
+    std::tuple<UI*, Point> resize_point;
     
 };
 #endif
