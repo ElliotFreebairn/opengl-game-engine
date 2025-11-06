@@ -186,6 +186,7 @@ void UI::resize_point(float xoffset, float yoffset, Point corner)
                 set_position(glm::vec2(current_position.x, current_position.y));
                 set_size(glm::vec2(current_size.x - OFFSET, current_size.y - OFFSET));
             }
+            break;
             //std::cout << "BOTTOM RIGHT"  << std::endl;
         case TOP_MIDDLE:
             if (yoffset > 0) {
