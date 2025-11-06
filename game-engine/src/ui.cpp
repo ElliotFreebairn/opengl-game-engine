@@ -106,13 +106,28 @@ Point UI::which_point(float xpos, float ypos)
         return Point::TOP_MIDDLE;
     }
 
-    // middle bottom
+    // bottom middle
     if ((xpos > leftX + xoffset && xpos < rightX - xoffset) &&
         (ypos > middleY + yoffset && ypos < bottomY))
     {
         return Point::BOTTOM_MIDDLE;
     }
-    return Point::NONE; 
+
+    // middle left
+    if ((xpos > leftX && xpos < leftX + xoffset) &&
+        (ypos > topY + yoffset && ypos < bottomY - yoffset))
+    {
+        return Point::MIDDLE_LEFT;
+    }
+
+    // middle right
+    if ((xpos > middleX + xoffset && xpos < rightX) &&
+        (ypos > topY + yoffset && ypos < bottomY - yoffset))
+    {
+        return Point::MIDDLE_RIGHT;
+    }
+
+    return Point::NONE;
 }
 
 
@@ -192,6 +207,28 @@ void UI::resize_point(float xoffset, float yoffset, Point corner)
             if (yoffset > 0) {
                 set_position(glm::vec2(current_position.x, current_position.y));
                 set_size(glm::vec2(current_size.x, current_size.y - OFFSET));
+            }
+            break;
+        case MIDDLE_LEFT:
+            if (xoffset < 0) {
+                set_position(glm::vec2(current_position.x - OFFSET, current_position.y));
+                set_size(glm::vec2(current_size.x + OFFSET, current_size.y));
+            }
+
+            if (xoffset > 0) {
+                set_position(glm::vec2(current_position.x + OFFSET, current_position.y));
+                set_size(glm::vec2(current_size.x - OFFSET, current_size.y));
+            }
+            break;
+        case MIDDLE_RIGHT:
+            if (xoffset > 0) {
+                set_position(glm::vec2(current_position.x, current_position.y));
+                set_size(glm::vec2(current_size.x + OFFSET, current_size.y));
+            }
+
+            if (xoffset < 0) {
+                set_position(glm::vec2(current_position.x, current_position.y));
+                set_size(glm::vec2(current_size.x - OFFSET, current_size.y));
             }
             break;
         case NONE:
