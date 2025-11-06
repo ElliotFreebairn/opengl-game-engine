@@ -38,7 +38,9 @@ void Game::Init()
 {
     // load shaders
     ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "rectangle");
-    ResourceManager::LoadTexture("resources/textures/dirt.jpg", true, "block");
+    ResourceManager::LoadTexture("resources/textures/dirt.jpg", true, "dirt_block");
+    ResourceManager::LoadTexture("resources/textures/cobblestone.jpeg", true, "cobblestone_block");
+    ResourceManager::LoadTexture("resources/textures/oak.jpg", true, "oak_block");
 
     // Initialize player
     player = new Player();
@@ -97,7 +99,22 @@ void Game::ProcessInput(float dt)
         player->get_camera().ProcessKeyboard(DOWN, dt);
     if (keys[GLFW_MOUSE_BUTTON_LEFT]) {
         if (glfwGetTime() - last_block_place > 0.1f) {
-            spawn_block("rectangle", "block");
+            int randomNum = rand() % 3;
+            
+            std::string texture_name = "";
+            switch (randomNum) {
+                case 0:
+                    texture_name = "dirt_block"; 
+                    break;
+                case 1:
+                    texture_name = "cobblestone_block";
+                    break;
+                case 2:
+                    texture_name = "oak_block";
+                    break;
+            }
+
+            spawn_block("rectangle", texture_name);
             last_block_place = glfwGetTime();
         }
     }
