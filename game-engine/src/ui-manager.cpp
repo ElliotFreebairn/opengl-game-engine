@@ -32,10 +32,10 @@ void UIManager::Init() {
 void UIManager::ProcessInput(GLFWwindow *window)
 {
     bool change_cursor_type = false;
-    if (keys[GLFW_KEY_SPACE])
+    if (keys[GLFW_KEY_M])
     {
         active = !active;
-        keys[GLFW_KEY_SPACE] = false;
+        keys[GLFW_KEY_M] = false;
     }
     if (keys[GLFW_KEY_ENTER])
     {

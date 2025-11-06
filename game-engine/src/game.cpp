@@ -38,7 +38,7 @@ void Game::Init()
 {
     // load shaders
     ResourceManager::LoadShader("shaders/vertex.vs", "shaders/fragment.fs", "rectangle");
-    ResourceManager::LoadTexture("resources/textures/block.jpg", true, "block");
+    ResourceManager::LoadTexture("resources/textures/dirt.jpg", true, "block");
 
     // Initialize player
     player = new Player();
@@ -91,6 +91,10 @@ void Game::ProcessInput(float dt)
         player->get_camera().ProcessKeyboard(LEFT, dt);
     if (keys[GLFW_KEY_D])
         player->get_camera().ProcessKeyboard(RIGHT, dt);
+    if (keys[GLFW_KEY_SPACE])
+        player->get_camera().ProcessKeyboard(UP, dt);
+    if (keys[GLFW_KEY_LEFT_SHIFT])
+        player->get_camera().ProcessKeyboard(DOWN, dt);
     if (keys[GLFW_MOUSE_BUTTON_LEFT]) {
         if (glfwGetTime() - last_block_place > 0.1f) {
             spawn_block("rectangle", "block");

@@ -1,4 +1,5 @@
 game-engine/program
+game-engine/todo.md
 *.o
 vscode/
 *vscode/
