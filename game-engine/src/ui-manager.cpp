@@ -53,18 +53,7 @@ void UIManager::ProcessInput(GLFWwindow *window)
 
     if (change_cursor_type)
     {
-        if (resize)
-        {
-            set_cursor(window, GLFW_HRESIZE_CURSOR);
-        }
-        else if (dragging)
-        {
-            set_cursor(window, GLFW_HAND_CURSOR);
-        }
-        else
-        {
-            set_cursor(window, GLFW_ARROW_CURSOR);
-        }
+        update_cursor(window);
     }
 }
 
@@ -77,11 +66,8 @@ void UIManager::ProcessMouseInput(float xoffset, float yoffset)
     }
     if (resized_obj != nullptr)
     {
-        glm::vec2 old_position = resized_obj->get_position();
-        Point corner = std::get<1>(resize_point);
-        resized_obj->resize_point(xoffset, yoffset, corner);
-        // figure out which corner based on x and y offset
-        // increase size and move position based on the direction
+        Point point = std::get<1>(resize_point);
+        resized_obj->resize_point(xoffset, yoffset, point);
     }
 }
 
@@ -152,7 +138,18 @@ void UIManager::update_cursor(GLFWwindow* window)
 {
     if (resize)
     {
-        set_cursor(window, GLFW_HRESIZE_CURSOR);
+        ResizeType resize_type = get_resize_type(std::get<1>(resize_point));
+        switch(resize_type)
+        {
+            case HORIZONTAL:
+                set_cursor(window, GLFW_HRESIZE_CURSOR);
+                break;
+            case VERTICAL:
+                set_cursor(window, GLFW_VRESIZE_CURSOR);
+                break;
+            default:
+                set_cursor(window, GLFW_HAND_CURSOR);
+        }
     }
     else if (dragging)
     {
@@ -169,3 +166,16 @@ void UIManager::set_cursor(GLFWwindow* window, int cursor_shape) {
     glfwSetCursor(window, cursor);
 }
 
+
+ResizeType UIManager::get_resize_type(Point point) {
+    if (point == Point::MIDDLE_LEFT || point == Point::MIDDLE_RIGHT)
+    {
+        return ResizeType::HORIZONTAL;
+    } 
+    else if (point == Point::TOP_MIDDLE || point == Point::BOTTOM_MIDDLE)
+    {
+        return ResizeType::VERTICAL;
+    } else {
+        return ResizeType::DIAGONAL;
+    }
+}

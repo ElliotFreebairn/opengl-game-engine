@@ -16,8 +16,14 @@
     UIManager should handle all aspects of the user interface, including rendering UI elements,
     managing user input for UI interactions, and updating UI states.
 */
-class UIManager {
 
+enum ResizeType {
+    VERTICAL,
+    HORIZONTAL,
+    DIAGONAL,
+};
+
+class UIManager {
 public:
     UIManager();
     UIManager(const int width, const int height);
@@ -35,6 +41,7 @@ public:
 private:
     void update_cursor(GLFWwindow* window);
     void set_cursor(GLFWwindow* window, int cursor);
+    ResizeType get_resize_type(Point point);
 
     Shader shader;
     int screenWidth;
