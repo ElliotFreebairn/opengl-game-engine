@@ -6,7 +6,7 @@
 #include "texture.h"
 #include "resource_manager.h"
 #include "shader.h"
-#include "rectangle.h"
+#include "block.h"
 #include "camera.h"
 #include "player.h"
 #include "ui-manager.h"
@@ -38,14 +38,6 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 Game game;
 UIManager ui_manager;
-// Player camera
-// Player current_player;
-// Camera &camera = current_player.get_camera();
-// std::vector<Rectangle> blocks;
-// void place_block();
-// Rectangle shoot_block(std::string shader_name, std::string texture_name);
-// glm::vec3 shooting_velocity(0.0f);
-// float last_block_place = 0.0f;
 
 int main()
 {

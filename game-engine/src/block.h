@@ -1,15 +1,15 @@
-#ifndef RECTANGLE
-#define RECTANGLE
+#ifndef BLOCK
+#define BLOCK 
 
 #include "game_object.h"
 #include "shader.h"
 
 #include <iostream>
 
-class Rectangle: public GameObject {
+class Block: public GameObject {
 public:
-  Rectangle() {};
-  Rectangle(std::string shader_name, std::string texture_name);
+  Block() {};
+  Block(std::string shader_name, std::string texture_name);
 
   void init_data(std::string shader_name, std::string texture_name);
 

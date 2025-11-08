@@ -2,7 +2,7 @@
 #include "resource_manager.h"
 #include "shader.h"
 #include "player.h"
-#include "rectangle.h"
+#include "block.h"
 
 #include <vector>
 
@@ -13,10 +13,10 @@ Player *player;
 glm::vec3 shooting_velocity(0.0f);
 
 // Blocks
-//Rectangle *bullet_block;
+//Block *bullet_block;
 
-std::vector<Rectangle> shooting_blocks;
-std::vector<Rectangle> blocks;
+std::vector<Block> shooting_blocks;
+std::vector<Block> blocks;
 float last_block_place = 0.0f;
 
 Game::Game()
@@ -51,7 +51,7 @@ void Game::Update(float deltaTime)
     shooting_velocity = glm::normalize(player->get_camera().Front) * 3.0f; // 10 units per second
 
     // Update game state
-    for (Rectangle &block : shooting_blocks)
+    for (Block &block : shooting_blocks)
     {
         block.Position += shooting_velocity * deltaTime;
     }
@@ -72,12 +72,12 @@ void Game::Render()
     // Draw calls would go here
     // bullet_block->draw();
 
-    for (Rectangle &block : blocks)
+    for (Block &block : blocks)
     {
         block.draw();
     }
 
-    for (Rectangle &block : shooting_blocks)
+    for (Block &block : shooting_blocks)
     {
         block.draw();
     }
@@ -127,7 +127,7 @@ void Game::ProcessMouseInput(float xoffset, float yoffset)
 
 void Game::spawn_block(std::string shader_name, std::string texture_name, bool shooting_block)
 {
-	Rectangle block(shader_name, texture_name);
+	Block block(shader_name, texture_name);
 
 	// Position a certain distance in front of the player
 	glm::vec3 target = player->get_camera().Position + glm::normalize(player->get_camera().Front) * 5.0f;

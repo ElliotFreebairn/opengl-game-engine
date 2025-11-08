@@ -1,13 +1,13 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "rectangle.h"
+#include "block.h"
 #include "resource_manager.h"
 
-Rectangle::Rectangle(std::string shader_name, std::string texture_name) {
+Block::Block(std::string shader_name, std::string texture_name) {
   init_data(shader_name, texture_name);
 }
 
-void Rectangle::draw() {
+void Block::draw() {
   this->shader.Use();
   this->shader.SetInteger("ourTexture", 0);
 
@@ -26,7 +26,7 @@ void Rectangle::draw() {
   glBindVertexArray(0);
 }
 
-void Rectangle::init_data(std::string shader_name, std::string texture_name) {
+void Block::init_data(std::string shader_name, std::string texture_name) {
   float vertices[] = {
     -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
     0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
