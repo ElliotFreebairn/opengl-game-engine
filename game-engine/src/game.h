@@ -7,6 +7,7 @@
 #include <GLFW/glfw3.h>
 
 #include "camera.h"
+#include "level.h"
 
 class Game
 {
@@ -14,7 +15,9 @@ public:
     Game();
     Game(unsigned int width, unsigned int height);
     ~Game();
-
+    
+    Level level;
+    
     bool keys[1024];
     unsigned int width, height;
 

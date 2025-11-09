@@ -30,6 +30,7 @@ void Button::draw(Shader &shader, Texture2D &texture) {
     glBindVertexArray(0);
 }
 
+
 void Button::init_data() {
     unsigned int VBO;
 

@@ -3,8 +3,23 @@
 #include "block.h"
 #include "resource_manager.h"
 
+Block::Block() {
+    this->shader_name = "";
+    this->texture_name = "";
+}
+
 Block::Block(std::string shader_name, std::string texture_name) {
-  init_data(shader_name, texture_name);
+    init_data(shader_name, texture_name);
+    this->shader_name = shader_name;
+    this->texture_name = texture_name;
+}
+
+Block::Block(std::string shader_name, std::string texture_name, glm::vec3 position)
+{
+    init_data(shader_name, texture_name);
+    set_position(position);
+    this->shader_name = shader_name;
+    this->texture_name = texture_name;
 }
 
 void Block::draw() {
@@ -92,4 +107,14 @@ void Block::init_data(std::string shader_name, std::string texture_name) {
 
   this->shader = ResourceManager::GetShader(shader_name);
   this->Sprite = ResourceManager::GetTexture(texture_name);
+}
+
+std::string Block::get_shader_name()
+{
+    return shader_name;
+}
+
+std::string Block::get_texture_name()
+{
+    return texture_name;
 }

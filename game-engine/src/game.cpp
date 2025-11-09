@@ -3,6 +3,7 @@
 #include "shader.h"
 #include "player.h"
 #include "block.h"
+#include "level.h"
 
 #include <vector>
 
@@ -16,7 +17,6 @@ glm::vec3 shooting_velocity(0.0f);
 //Block *bullet_block;
 
 std::vector<Block> shooting_blocks;
-std::vector<Block> blocks;
 float last_block_place = 0.0f;
 
 Game::Game()
@@ -72,10 +72,7 @@ void Game::Render()
     // Draw calls would go here
     // bullet_block->draw();
 
-    for (Block &block : blocks)
-    {
-        block.draw();
-    }
+    level.draw();
 
     for (Block &block : shooting_blocks)
     {
@@ -118,6 +115,10 @@ void Game::ProcessInput(float dt)
             last_block_place = glfwGetTime();
         }
     }
+    if (keys[GLFW_KEY_K])
+        level.save_map("minecraft");
+    if (keys[GLFW_KEY_L])
+        level.load_map("minecraft");
 }
 
 void Game::ProcessMouseInput(float xoffset, float yoffset)
@@ -139,6 +140,6 @@ void Game::spawn_block(std::string shader_name, std::string texture_name, bool s
     {
         shooting_blocks.push_back(block);
     } else {
-        blocks.push_back(block);
+        level.add_block(block);
     }
 }
