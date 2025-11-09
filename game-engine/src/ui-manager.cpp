@@ -93,7 +93,7 @@ void UIManager::Update(GLFWwindow* window, float deltaTime, float xpos, float yp
             this->dragging=true;
         } else if (btn.is_clicked(xpos, ypos, keys, (int)GLFW_MOUSE_BUTTON_LEFT))
         {
-            game.spawn_block("rectangle", "block", true);
+            game.spawn_block("rectangle", "dirt_block", true);
             btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 0.6f));
         } else {
             btn.set_colour(glm::vec4(0.5f, 0.5f, 0.5f, 1.0f));

@@ -90,3 +90,8 @@ void Level::load_map(std::string file_to_load)
         add_block(new_block);
     }
 }
+
+std::list<Block>& Level::get_blocks()
+{
+    return blocks;
+}

@@ -6,6 +6,7 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "game_object.h"
 #include "camera.h"
 #include "level.h"
 
@@ -29,5 +30,8 @@ public:
     void Update(float deltaTime);
     void Render();
     void spawn_block(std::string shader_name, std::string texture_name, bool shooting_block = false);
+
+    bool check_collisions(GameObject &obj);
+    bool check_collision(GameObject &one, GameObject &two);
 };
 #endif

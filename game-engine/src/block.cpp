@@ -28,6 +28,7 @@ void Block::draw() {
 
   glm::mat4 model = glm::mat4(1.0f);
   model = glm::translate(model, this->Position);
+  //model = glm::scale(model, glm::vec3(this->Size));
   //model = glm::rotate(model, (float)glfwGetTime() * glm::radians(50.0f), glm::vec3(1.0f, 0.0f, 0.5f));
   this->shader.SetMatrix4("model", model);
 

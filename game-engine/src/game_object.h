@@ -13,12 +13,13 @@ class GameObject {
 
 public:
     glm::vec3 Position;
+    glm::vec3 Size;
     glm::vec3 Colour;
 
     Texture2D Sprite;
     
     GameObject();
-    GameObject(glm::vec3 Pos, glm::vec3 Colour, Texture2D Sprite);
+    GameObject(glm::vec3 Pos, glm::vec3 Size, glm::vec3 Colour, Texture2D Sprite);
 
     void set_position(glm::vec3 position) { Position = position; }
     

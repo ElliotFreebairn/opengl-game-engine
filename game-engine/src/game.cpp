@@ -12,6 +12,7 @@
 // Game-related data
 Player *player;
 glm::vec3 shooting_velocity(0.0f);
+bool wireframe_active = false;
 
 // Blocks
 //Block *bullet_block;
@@ -111,7 +112,7 @@ void Game::ProcessInput(float dt)
                     break;
             }
 
-            spawn_block("rectangle", texture_name);
+            spawn_block("rectangle", texture_name, false);
             last_block_place = glfwGetTime();
         }
     }
@@ -119,6 +120,16 @@ void Game::ProcessInput(float dt)
         level.save_map("minecraft");
     if (keys[GLFW_KEY_L])
         level.load_map("minecraft");
+    if (keys[GLFW_KEY_R]) {
+        wireframe_active = !wireframe_active;
+        keys[GLFW_KEY_R] = false;
+        
+        if (wireframe_active) {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        } else {
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        }
+    }
 }
 
 void Game::ProcessMouseInput(float xoffset, float yoffset)
@@ -131,15 +142,44 @@ void Game::spawn_block(std::string shader_name, std::string texture_name, bool s
 	Block block(shader_name, texture_name);
 
 	// Position a certain distance in front of the player
-	glm::vec3 target = player->get_camera().Position + glm::normalize(player->get_camera().Front) * 5.0f;
-	glm::vec3 block_pos = glm::floor(target);
+	glm::vec3 target = player->get_camera().Position + glm::normalize(player->get_camera().Front) * 3.0f;
+	//glm::vec3 block_pos = glm::floor(target);
+    glm::vec3 block_pos = target;
 
 	block.set_position(block_pos);
-
-    if (shooting_block)
+   
+    if (!check_collisions(block))
     {
-        shooting_blocks.push_back(block);
-    } else {
         level.add_block(block);
+    } else {
+        std::cout << "COLLISION" << std::endl;
     }
+}
+
+bool Game::check_collisions(GameObject &obj)
+{
+    for (GameObject &other_obj : level.get_blocks())
+    {
+        if (check_collision(obj, other_obj))
+            return true;
+    }
+    return false;
+}
+
+bool Game::check_collision(GameObject &one, GameObject &two)
+{
+    /*
+        Has to be a collision on all axis (x, y, z) for it to be true
+    */
+
+    bool collisionX = one.Position.x + one.Size.x >= two.Position.x &&
+        two.Position.x + two.Size.x >= one.Position.x;
+
+    bool collisionY = one.Position.y + one.Size.y >= two.Position.y &&
+        two.Position.y + two.Size.y >= one.Position.y;
+
+    bool collisionZ = one.Position.z + one.Size.z >= two.Position.z &&
+        two.Position.z + two.Size.z >= one.Position.z;
+
+    return collisionX && collisionY && collisionZ;
 }

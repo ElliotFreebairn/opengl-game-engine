@@ -20,6 +20,8 @@ public:
     void add_blocks(std::list<Block> &blocks);
     void draw();
 
+    std::list<Block>& get_blocks();
+
 private:
     std::list<Block> blocks;
 };
