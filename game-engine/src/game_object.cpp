@@ -1,7 +1,7 @@
 #include "game_object.h"
 
 GameObject::GameObject()
-  : Position(0.0f, 0.0f, 0.0f), Size(1.0f, 1.0f, 1.0f), Colour(1.0f), Sprite() {}
+  : Position(0.0f, 0.0f, 0.0f), Size(0.75f, 0.75f, 0.75f), Colour(1.0f), Sprite() {}
 
 GameObject::GameObject(glm::vec3 pos, glm::vec3 size, glm::vec3 colour, Texture2D sprite)
   : Position(pos), Size(size), Colour(colour), Sprite(sprite) {}
