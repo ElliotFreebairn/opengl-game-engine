@@ -147,12 +147,37 @@ void Game::spawn_block(std::string shader_name, std::string texture_name, bool s
     glm::vec3 block_pos = target;
 
 	block.set_position(block_pos);
+
+    Side fake_pos = get_nearest_block(block);
    
     if (!check_collisions(block))
     {
         level.add_block(block);
     } else {
         std::cout << "COLLISION" << std::endl;
+    }
+}
+
+Side get_collision_side(GameObject& one, GameObject& two)
+{
+    if (one.Position.x + one.Size.x >= two.Position.x + two.Size.x)
+        return Side::Right;
+
+    if (one.Position.x <= two.Position.x)
+        return Side::Left;
+}
+
+Side Game::get_nearest_block(GameObject &obj)
+{
+    for (GameObject &other_obj : level.get_blocks())
+    {
+        if (check_collision(obj, other_obj))
+        {
+            // first find which corner 
+            // right side of the other obj = other_obj.(x + size.x) <= obj.(x + size.x)
+            Side side = Side(get_collision_side(obj, other_obj));
+            std::cout << "SIDE = " << side.asString();
+        }
     }
 }
 

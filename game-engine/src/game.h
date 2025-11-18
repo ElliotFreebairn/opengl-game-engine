@@ -9,6 +9,8 @@
 #include "game_object.h"
 #include "camera.h"
 #include "level.h"
+#include "side.h"
+
 
 class Game
 {
@@ -33,5 +35,7 @@ public:
 
     bool check_collisions(GameObject &obj);
     bool check_collision(GameObject &one, GameObject &two);
+    Side get_nearest_block(GameObject &obj);
+
 };
 #endif
