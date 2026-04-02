@@ -60,7 +60,12 @@ void Game::Update(float deltaTime)
 }
 
 void Game::Render()
-{
+{    
+    if (wireframe_active) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    } else {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
     // Render game objects
     Shader shader = ResourceManager::GetShader("rectangle");
     shader.Use();
@@ -72,6 +77,8 @@ void Game::Render()
     shader.SetMatrix4("view", view);
     // Draw calls would go here
     // bullet_block->draw();
+
+
 
     level.draw();
 
@@ -123,12 +130,6 @@ void Game::ProcessInput(float dt)
     if (keys[GLFW_KEY_R]) {
         wireframe_active = !wireframe_active;
         keys[GLFW_KEY_R] = false;
-        
-        if (wireframe_active) {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        } else {
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        }
     }
 }
 
