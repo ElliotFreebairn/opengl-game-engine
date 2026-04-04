@@ -207,18 +207,20 @@ bool Game::find_target_block(glm::ivec3& hit_cell) const
     glm::vec3 origin = player->get_camera().Position;
     glm::vec3 dir = glm::normalize(player->get_camera().Front);
 
-    for (float t = 0.0f; t < 6.0f; t+= 0.05f){
+    for (float t = 3.0f; t < 4.5f; t+= 0.05f){
         glm::vec3 p = origin + dir * t;
         glm::ivec3 cell = world_to_grid(p);
 
         if (!level.in_bounds(cell.x, cell.y, cell.z)) {
             continue;
         }
-
-        if (!level.is_air(cell.x, cell.y, cell.z)) {
-            hit_cell = cell;
-            return true;
-        }
+        
+        hit_cell = cell;
+        return true;
+        //if (!level.is_air(cell.x, cell.y, cell.z)) {
+        //    hit_cell = cell;
+        //    return true;
+        //}
     }
 
     return false;

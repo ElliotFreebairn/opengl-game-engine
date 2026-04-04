@@ -73,7 +73,7 @@ void Level::set_block(int x, int y, int z, BlockCell cell)
         return;
     }
 
-    int ix = x +  WORLD_OFFSET_X;
+    int ix = x + WORLD_OFFSET_X;
     int iy = y + WORLD_OFFSET_Y;
     int iz = z + WORLD_OFFSET_Z;
 
@@ -87,7 +87,7 @@ bool Level::is_air(int x, int y, int z) const
         return true;
     }
 
-    int ix = x +  WORLD_OFFSET_X;
+    int ix = x + WORLD_OFFSET_X;
     int iy = y + WORLD_OFFSET_Y;
     int iz = z + WORLD_OFFSET_Z;
 
