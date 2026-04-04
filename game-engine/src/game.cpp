@@ -5,6 +5,8 @@
 #include "block.h"
 #include "level.h"
 
+#include "map_utils.h"
+
 #include <vector>
 
 #include <glm/glm.hpp>
@@ -19,6 +21,19 @@ bool wireframe_active = false;
 
 std::vector<Block> shooting_blocks;
 float last_block_place = 0.0f;
+
+// helper methods
+BlockType texture_to_block_type(const std::string& texture_name)
+{
+    if (texture_name == "dirt_block")
+        return BlockType::Dirt;
+    if (texture_name == "cobblestone_block")
+        return BlockType::Cobblestone;
+    if (texture_name == "oak_block")
+        return BlockType::Oak;
+
+    return BlockType::Air;
+}
 
 Game::Game()
     : keys(), width(800), height(600)
@@ -140,55 +155,71 @@ void Game::ProcessMouseInput(float xoffset, float yoffset)
 
 void Game::spawn_block(std::string shader_name, std::string texture_name, bool shooting_block)
 {
-	Block block(shader_name, texture_name);
+    glm::vec3 target = player->get_camera().Position +
+        glm::normalize(player->get_camera().Front) * 3.0f;
 
-	// Position a certain distance in front of the player
-	glm::vec3 target = player->get_camera().Position + glm::normalize(player->get_camera().Front) * 3.0f;
-	//glm::vec3 block_pos = glm::floor(target);
-    glm::vec3 block_pos = target;
+    glm::ivec3 cell = world_to_grid(target);  
 
-	block.set_position(block_pos);
-
-    Side fake_pos = get_nearest_block(block);
-   
-    if (!check_collisions(block))
-    {
-        level.add_block(block);
-    } else {
-        std::cout << "COLLISION" << std::endl;
+    // ensure cell is in bounds
+    if (!level.in_bounds(cell.x, cell.y, cell.z)) {
+        std::cout << "cell is out of bounds" << std::endl;
+        return;
     }
+
+    // only place block if the cell is an air block
+    if (level.is_air(cell.x, cell.y, cell.z)) {
+        BlockType type = texture_to_block_type(texture_name);
+
+        level.set_block(cell.x, cell.y, cell.z, type);
+        std::cout << "block has been set" << std::endl;
+    }
+//	Block block(shader_name, texture_name);
+//	// Position a certain distance in front of the player
+//	glm::vec3 target = player->get_camera().Position + glm::normalize(player->get_camera().Front) * 3.0f;
+//	//glm::vec3 block_pos = glm::floor(target);
+//    glm::vec3 block_pos = target;
+//
+//	block.set_position(block_pos);
+//
+//   
+//    if (!check_collisions(block))
+//    {
+//        level.add_block(block);
+//    } else {
+//        std::cout << "COLLISION" << std::endl;
+//    }
 }
 
 Side get_collision_side(GameObject& one, GameObject& two)
 {
-    if (one.Position.x + one.Size.x >= two.Position.x + two.Size.x)
-        return Side::Right;
-
-    if (one.Position.x <= two.Position.x)
-        return Side::Left;
+//    if (one.Position.x + one.Size.x >= two.Position.x + two.Size.x)
+//        return Side::Right;
+//
+//    if (one.Position.x <= two.Position.x)
+//        return Side::Left;
 }
 
 Side Game::get_nearest_block(GameObject &obj)
 {
-    for (GameObject &other_obj : level.get_blocks())
-    {
-        if (check_collision(obj, other_obj))
-        {
-            // first find which corner 
-            // right side of the other obj = other_obj.(x + size.x) <= obj.(x + size.x)
-            Side side = Side(get_collision_side(obj, other_obj));
-            std::cout << "SIDE = " << side.asString();
-        }
-    }
+    //for (GameObject &other_obj : level.get_blocks())
+    //{
+    //    if (check_collision(obj, other_obj))
+    //    {
+    //        // first find which corner 
+    //        // right side of the other obj = other_obj.(x + size.x) <= obj.(x + size.x)
+    //        Side side = Side(get_collision_side(obj, other_obj));
+    //        std::cout << "SIDE = " << side.asString();
+    //    }
+    //}
 }
 
 bool Game::check_collisions(GameObject &obj)
 {
-    for (GameObject &other_obj : level.get_blocks())
-    {
-        if (check_collision(obj, other_obj))
-            return true;
-    }
+    //for (GameObject &other_obj : level.get_blocks())
+    //{
+    //    if (check_collision(obj, other_obj))
+    //        return true;
+    //}
     return false;
 }
 
@@ -209,3 +240,6 @@ bool Game::check_collision(GameObject &one, GameObject &two)
 
     return collisionX && collisionY && collisionZ;
 }
+
+
+

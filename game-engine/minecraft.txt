@@ -1,0 +1,11 @@
+rectangle,cobblestone_block,-0.000000,0.020944,-2.999927
+rectangle,oak_block,0.423367,-0.892124,-2.832821
+rectangle,cobblestone_block,1.669012,-0.700336,-2.392473
+rectangle,cobblestone_block,2.243788,0.157008,-1.985136
+rectangle,cobblestone_block,2.037353,0.932029,-1.995123
+rectangle,dirt_block,1.181338,1.477272,-2.328542
+rectangle,dirt_block,0.793940,0.705427,-2.805714
+rectangle,cobblestone_block,-0.301864,1.089754,-2.778725
+rectangle,dirt_block,-1.058889,0.852046,-2.674466
+rectangle,cobblestone_block,-0.991281,0.068063,-2.830677
+rectangle,dirt_block,-1.062527,-0.771398,-2.697403
