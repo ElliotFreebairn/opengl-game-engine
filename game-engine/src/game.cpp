@@ -71,6 +71,8 @@ void Game::Update(float deltaTime)
     {
         block.Position += shooting_velocity * deltaTime;
     }
+
+    has_target_block = find_target_block(target_block_cell);
     //bullet_block->Position += shooting_velocity * deltaTime;
 }
 
@@ -100,6 +102,10 @@ void Game::Render()
     for (Block &block : shooting_blocks)
     {
         block.draw();
+    }
+
+    if (has_target_block) {
+        draw_block_outline(target_block_cell);
     }
 }
 
@@ -134,7 +140,7 @@ void Game::ProcessInput(float dt)
                     break;
             }
 
-            spawn_block("rectangle", texture_name, false);
+            spawn_block(texture_name, false);
             last_block_place = glfwGetTime();
         }
     }
@@ -153,7 +159,7 @@ void Game::ProcessMouseInput(float xoffset, float yoffset)
     player->get_camera().ProcessMouseMovement(xoffset, yoffset);
 }
 
-void Game::spawn_block(std::string shader_name, std::string texture_name, bool shooting_block)
+void Game::spawn_block(std::string texture_name, bool shooting_block)
 {
     glm::vec3 target = player->get_camera().Position +
         glm::normalize(player->get_camera().Front) * 3.0f;
@@ -173,73 +179,49 @@ void Game::spawn_block(std::string shader_name, std::string texture_name, bool s
         level.set_block(cell.x, cell.y, cell.z, type);
         std::cout << "block has been set" << std::endl;
     }
-//	Block block(shader_name, texture_name);
-//	// Position a certain distance in front of the player
-//	glm::vec3 target = player->get_camera().Position + glm::normalize(player->get_camera().Front) * 3.0f;
-//	//glm::vec3 block_pos = glm::floor(target);
-//    glm::vec3 block_pos = target;
-//
-//	block.set_position(block_pos);
-//
-//   
-//    if (!check_collisions(block))
-//    {
-//        level.add_block(block);
-//    } else {
-//        std::cout << "COLLISION" << std::endl;
-//    }
 }
 
-Side get_collision_side(GameObject& one, GameObject& two)
-{
-//    if (one.Position.x + one.Size.x >= two.Position.x + two.Size.x)
-//        return Side::Right;
-//
-//    if (one.Position.x <= two.Position.x)
-//        return Side::Left;
+void Game::outline_block(std::string texture_name) {
+    glm::vec3 target = player->get_camera().Position +
+        glm::normalize(player->get_camera().Front) * 3.0f;
+
+    glm::ivec3 cell = world_to_grid(target);
+
+    if (!level.in_bounds(cell.x, cell.y, cell.z)) {
+        std::cout << "cell is out of bounds" << std::endl;
+        return;
+    }
 }
 
-Side Game::get_nearest_block(GameObject &obj)
+bool Game::find_target_block(glm::ivec3& hit_cell) const
 {
-    //for (GameObject &other_obj : level.get_blocks())
-    //{
-    //    if (check_collision(obj, other_obj))
-    //    {
-    //        // first find which corner 
-    //        // right side of the other obj = other_obj.(x + size.x) <= obj.(x + size.x)
-    //        Side side = Side(get_collision_side(obj, other_obj));
-    //        std::cout << "SIDE = " << side.asString();
-    //    }
-    //}
-}
+    glm::vec3 origin = player->get_camera().Position;
+    glm::vec3 dir = glm::normalize(player->get_camera().Front);
 
-bool Game::check_collisions(GameObject &obj)
-{
-    //for (GameObject &other_obj : level.get_blocks())
-    //{
-    //    if (check_collision(obj, other_obj))
-    //        return true;
-    //}
+    for (float t = 0.0f; t < 6.0f; t+= 0.05f){
+        glm::vec3 p = origin + dir * t;
+        glm::ivec3 cell = world_to_grid(p);
+
+        if (!level.in_bounds(cell.x, cell.y, cell.z)) {
+            continue;
+        }
+
+        if (!level.is_air(cell.x, cell.y, cell.z)) {
+            hit_cell = cell;
+            return true;
+        }
+    }
+
     return false;
 }
 
-bool Game::check_collision(GameObject &one, GameObject &two)
+void Game::draw_block_outline(const glm::ivec3& cell)
 {
-    /*
-        Has to be a collision on all axis (x, y, z) for it to be true
-    */
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    
+    Block outline_block("rectangle", "dirt_block", glm::vec3(cell.x, cell.y, cell.z));
+    outline_block.Size = glm::vec3(1.02f, 1.02f, 1.02f);
+    outline_block.draw();
 
-    bool collisionX = one.Position.x + one.Size.x >= two.Position.x &&
-        two.Position.x + two.Size.x >= one.Position.x;
-
-    bool collisionY = one.Position.y + one.Size.y >= two.Position.y &&
-        two.Position.y + two.Size.y >= one.Position.y;
-
-    bool collisionZ = one.Position.z + one.Size.z >= two.Position.z &&
-        two.Position.z + two.Size.z >= one.Position.z;
-
-    return collisionX && collisionY && collisionZ;
+    glPolygonMode(GL_FRONT_AND_BACK, wireframe_active ? GL_LINE : GL_FILL);
 }
-
-
-

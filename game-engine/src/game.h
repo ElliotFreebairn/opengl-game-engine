@@ -24,6 +24,9 @@ public:
     bool keys[1024];
     unsigned int width, height;
 
+    bool has_target_block;
+    glm::ivec3 target_block_cell;
+
     // init game state (load all shaders/textures/levels)
     void Init();
     // game loop
@@ -31,11 +34,11 @@ public:
     void ProcessMouseInput(float xoffset, float yoffset);
     void Update(float deltaTime);
     void Render();
-    void spawn_block(std::string shader_name, std::string texture_name, bool shooting_block = false);
+    void spawn_block(std::string texture_name, bool shooting_block = false);
+    void outline_block(std::string texture_name); 
 
-    bool check_collisions(GameObject &obj);
-    bool check_collision(GameObject &one, GameObject &two);
-    Side get_nearest_block(GameObject &obj);
+    bool find_target_block(glm::ivec3& hit_cell) const;
+    void draw_block_outline(const glm::ivec3& cell);
 
 };
 #endif
