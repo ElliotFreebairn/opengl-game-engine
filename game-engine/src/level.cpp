@@ -30,7 +30,8 @@ Level::Level()
     for (int x = 0; x < WORLD_X; x++) {
         for (int y = 0; y < WORLD_Y; y++) {
             for (int z = 0; z < WORLD_Z; z++) {
-                blocks[x][y][z] = BlockType::Air;
+                blocks[x][y][z].type = BlockType::Air;
+                blocks[x][y][z].health = 10;
             }
         }
     }
@@ -52,10 +53,11 @@ bool Level::in_bounds(int x, int y, int z) const
         iz >= 0 && iz < WORLD_Z;
 }
 
-BlockType Level::get_block(int x, int y, int z) const
+BlockCell Level::get_block(int x, int y, int z) const
 {
     if (!in_bounds(x, y, z)) {
-        return BlockType::Air;
+
+        return BlockCell{};
     }
     
     int ix = x + WORLD_OFFSET_X;
@@ -65,7 +67,7 @@ BlockType Level::get_block(int x, int y, int z) const
     return blocks[ix][iy][iz];
 }
 
-void Level::set_block(int x, int y, int z, BlockType type)
+void Level::set_block(int x, int y, int z, BlockCell cell)
 {
     if (!in_bounds(x, y, z)) {
         return;
@@ -75,7 +77,8 @@ void Level::set_block(int x, int y, int z, BlockType type)
     int iy = y + WORLD_OFFSET_Y;
     int iz = z + WORLD_OFFSET_Z;
 
-    blocks[ix][iy][iz] = type;
+    blocks[ix][iy][iz].type = cell.type;
+    blocks[ix][iy][iz].health = cell.health;
 }
 
 bool Level::is_air(int x, int y, int z) const
@@ -88,7 +91,7 @@ bool Level::is_air(int x, int y, int z) const
     int iy = y + WORLD_OFFSET_Y;
     int iz = z + WORLD_OFFSET_Z;
 
-    return blocks[ix][iy][iz] == BlockType::Air;
+    return blocks[ix][iy][iz].type == BlockType::Air;
 }
 
 void Level::draw()
@@ -96,22 +99,38 @@ void Level::draw()
     for (int ix = 0; ix < WORLD_X; ix++) {
         for (int iy = 0; iy < WORLD_Y; iy++) {
             for (int iz = 0; iz < WORLD_Z; iz++) {
-                BlockType type = blocks[ix][iy][iz];
+                BlockCell cell = blocks[ix][iy][iz];
 
-                if (type == BlockType::Air)
+                if (cell.type == BlockType::Air)
                     continue;
 
                 int x = ix - WORLD_OFFSET_X;
                 int y = iy - WORLD_OFFSET_Y;
                 int z = iz - WORLD_OFFSET_Z;
                 
-                std::string texture_name = block_type_to_texture(type);
+                std::string texture_name = block_type_to_texture(cell.type);
 
                 Block block("rectangle", texture_name, glm::vec3(x, y, z));
                 block.draw();
             }
         }
     }
+}
+
+void Level::damage_block(int x, int y, int z)
+{
+    BlockCell cell = get_block(x, y, z); 
+
+    if (is_air(x, y, z)) {
+        return;
+    }
+    
+    cell.health -= 1;
+    if (cell.health == 0) {
+        cell.type = BlockType::Air;
+    }
+
+    set_block(x, y, z, cell);
 }
 
 void Level::save_map(std::string file_to_save)
@@ -127,12 +146,12 @@ void Level::save_map(std::string file_to_save)
     for (int x = 0; x < WORLD_X; x++) {
         for (int y = 0; y < WORLD_Y; y++) {
             for (int z = 0; z < WORLD_Z; z++) {
-                BlockType type = blocks[x][y][z];
+                BlockCell cell = blocks[x][y][z];
 
-                if (type == BlockType::Air)
+                if (cell.type == BlockType::Air)
                     continue;
 
-                file << x << "," << y << "," << z << "," << static_cast<int>(type) << "\n";
+                file << x << "," << y << "," << z << "," << static_cast<int>(cell.type) << "\n";
             }
         }
     }
@@ -144,7 +163,7 @@ void Level::load_map(std::string file_to_load)
     for (int x = 0; x < WORLD_X; x++) {
         for (int y = 0; y < WORLD_Y; y++) {
             for (int z = 0; z < WORLD_Z; z++) {
-                blocks[x][y][z] = BlockType::Air;
+                blocks[x][y][z].type = BlockType::Air;
             }
         }
     }
@@ -169,8 +188,8 @@ void Level::load_map(std::string file_to_load)
         int x = values[0];
         int y = values[1];
         int z = values[2];
-        BlockType type = static_cast<BlockType>(values[3]);
+        //BlockType type = static_cast<BlockType>(values[3]);
 
-        set_block(x, y, z, type);
+        //set_block(x, y, z, type);
     }
 }

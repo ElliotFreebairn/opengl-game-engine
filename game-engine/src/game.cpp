@@ -21,6 +21,7 @@ bool wireframe_active = false;
 
 std::vector<Block> shooting_blocks;
 float last_block_place = 0.0f;
+float last_block_damage = 0.0f;
 
 // helper methods
 BlockType texture_to_block_type(const std::string& texture_name)
@@ -152,6 +153,12 @@ void Game::ProcessInput(float dt)
         wireframe_active = !wireframe_active;
         keys[GLFW_KEY_R] = false;
     }
+    if (keys[GLFW_KEY_G]) {
+        if (has_target_block && glfwGetTime() - last_block_damage > 0.2f) {
+            level.damage_block(target_block_cell.x, target_block_cell.y, target_block_cell.z);
+            last_block_damage = glfwGetTime();
+        }
+    }
 }
 
 void Game::ProcessMouseInput(float xoffset, float yoffset)
@@ -174,9 +181,11 @@ void Game::spawn_block(std::string texture_name, bool shooting_block)
 
     // only place block if the cell is an air block
     if (level.is_air(cell.x, cell.y, cell.z)) {
-        BlockType type = texture_to_block_type(texture_name);
+        BlockCell block_cell;
+        block_cell.type = texture_to_block_type(texture_name);
+        block_cell.health = 10;
 
-        level.set_block(cell.x, cell.y, cell.z, type);
+        level.set_block(cell.x, cell.y, cell.z, block_cell);
         std::cout << "block has been set" << std::endl;
     }
 }
